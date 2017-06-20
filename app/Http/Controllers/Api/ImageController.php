@@ -37,12 +37,16 @@ class ImageController extends Controller
     public function store(Request $request)
     {
         $result="No File";
+        $image="";
+        $upload_status="";
         if($request->hasFile('emImage')){
             $image='images/employees/'.$request->file('emImage')->getClientOriginalName();
-            $result=Image::make($request->file('emImage'))->resize(200,200)->save($image);
+            $result=Image::make($request->file('emImages'))->resize(200,200)->save($image);
         }
-
-        return response($result);
+        if($result){
+            $upload_status=$image;
+        }
+        return response()->json(['upload_status'=>$upload_status]);
     }
 
     /**
