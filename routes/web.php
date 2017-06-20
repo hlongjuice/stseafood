@@ -19,3 +19,4 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/test','Api\ProductionController@index');
+Route::get('excel','ExcelController@index')->name('excel.index');
