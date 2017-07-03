@@ -19,7 +19,11 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/test','Api\ProductionController@index');
+<<<<<<< HEAD
 /*Tester*/
 Route::get('tester/employee/{number}','Tester\EmployeeController@addEmployee')
     ->name('tester.employee');
 Route::resource('tester/production','Tester\ProductionController');
+=======
+Route::get('excel','ExcelController@index')->name('excel.index');
+>>>>>>> origin/master
