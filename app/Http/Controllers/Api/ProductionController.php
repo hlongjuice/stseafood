@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Production\ProductionWork;
+use App\Models\Production\ProductionWorkPerformance;
 use DB;
 use App\Models\Production\ProductionDate;
 use App\Models\Production\ProductionDateTime;
-use App\Models\Production\ProductionEmPerformance;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -79,13 +79,32 @@ class ProductionController extends Controller
 
         /*Production Work*/
         $productionWork=ProductionWork::where('date_time_id',$productionDateTime)
+            ->where('activity_id',$request->input('activity_id'))
+            ->where('shrimp_type_id',$request->input('shrimp_type_id'))
+            ->where('shrimp_size_id',$request->input('shrimp_size_id'))
+            ->first();
+        if($productionWork == null){
+            $productionWork=new ProductionWork();
+            $productionWork->p_date_time_id=$productionDateTime->id;
+            $productionWork->p_activity_id=$request->$request->input('activity_id');
+            $productionWork->p_shrimp_type_id=$request->input('shrimp_type_id');
+            $productionWork->p_shrimp_size_id=$request->input('shrimp_size_id');
+            $productionWork->save();
+        }
+        /*Production Work Performance*/
+        $productionWorkPerformance=new ProductionWorkPerformance();
+        $productionWorkPerformance->p_work_id=$productionWork->id;
+        $productionWorkPerformance->em_id=$request->input('em_id');
+        $productionWorkPerformance->weight=$request->input('weight');
+        $productionWorkPerformance->save();
 
 
 
         return response()->json([
             'productionDate' => $productionDate,
             'productionDateTime' => $productionDateTime,
-            'productionEmPerformance' => $productionEmPerformance
+            'productionWork'=>$productionWork,
+            'productionWorkPerformance'=>$productionWorkPerformance
         ]);
     }
 

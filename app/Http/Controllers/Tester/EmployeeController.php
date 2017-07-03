@@ -32,7 +32,8 @@ class EmployeeController extends Controller
             $newEmployees[] = [
                 'name' => $firstname->name,
                 'lastname' => $lastnames[$i]->name,
-                'division_id' => $division->id
+                'division_id' => $division->id,
+                'salary_type_id'=>random_int(1,2)
             ];
             $i++;
         }
