@@ -27,3 +27,7 @@ Route::resource('tester/production','Tester\ProductionController');
 
 Route::get('excel','ExcelController@index')->name('excel.index');
 
+Route::prefix('production')->group(function(){
+    Route::get('activity','Api\Production\ActivityController@getAllActivity');
+});
+

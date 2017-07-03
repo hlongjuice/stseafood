@@ -17,15 +17,28 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::group(['middleware' => 'auth:api'], function () {
-    Route::get('production/dates', 'Api\ProductionController@getAllDate')
-        ->name('production.dates');
-    Route::get('production/schedule/{id}', 'Api\ProductionController@getProductionSchedule')
-        ->name('production.schedule');
-    Route::resource('production', 'Api\ProductionController');
+//    Route::get('production/dates', 'Api\ProductionController@getAllDate')
+//        ->name('production.dates');
+//    Route::get('production/schedule/{id}', 'Api\ProductionController@getProductionSchedule')
+//        ->name('production.schedule');
+//    Route::resource('production', 'Api\ProductionController');
     /*Employee*/
     Route::resource('employee','Api\EmployeeController');
     /*Division*/
     Route::resource('division','Api\DivisionController');
     /*Image Upload*/
     Route::resource('image_transfer','Api\ImageController');
+
+    /*Production Group*/
+    Route::prefix('production')->group(function(){
+        /*Activity*/
+       Route::get('activity','Api\Production\ActivityController@getAllActivity')
+           ->name('production.activity.getAllActivity');
+        /*Shrimp Size*/
+        Route::get('shrimp_size','Api\Production\ShrimpSizeController@getAllSize')
+            ->name('production.shrimp_size.getAllSize');
+        /*Shrimp Type*/
+        Route::get('shrimp_type','Api\Production\ShrimpTypeController@getAllType')
+            ->name('production.shrimp_type.getAllType');
+    });
 });
