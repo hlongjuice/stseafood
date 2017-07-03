@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Production;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,6 +10,6 @@ class ProductionDate extends Model
     protected $fillable=['date'];
 
     public function productionDateTime(){
-        return $this->hasMany('App\Models\ProductionDateTime','date_id');
+        return $this->hasMany('App\Models\Production\ProductionDateTime','date_id');
     }
 }

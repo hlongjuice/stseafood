@@ -19,3 +19,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/test','Api\ProductionController@index');
+/*Tester*/
+Route::get('tester/employee/{number}','Tester\EmployeeController@addEmployee')
+    ->name('tester.employee');
+Route::resource('tester/production','Tester\ProductionController');

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Production\ProductionWork;
 use DB;
-use App\Models\ProductionDate;
-use App\Models\ProductionDateTime;
-use App\Models\ProductionEmPerformance;
+use App\Models\Production\ProductionDate;
+use App\Models\Production\ProductionDateTime;
+use App\Models\Production\ProductionEmPerformance;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -65,7 +66,6 @@ class ProductionController extends Controller
             $productionDate->date = $request->input('date');
             $productionDate->save();
         }
-
         /*Production Date Time*/
         $productionDateTime = ProductionDateTime::
         where('date_id', $productionDate->id)
@@ -74,19 +74,13 @@ class ProductionController extends Controller
             $productionDateTime = new ProductionDateTime();
             $productionDateTime->date_id = $productionDate->id;
             $productionDateTime->time_period = $request->input('timePeriod');
-            $productionDateTime->activity = $request->input('activity');
             $productionDateTime->save();
         }
 
+        /*Production Work*/
+        $productionWork=ProductionWork::where('date_time_id',$productionDateTime)
 
-        /*Production Employee Performance*/
-        $productionEmPerformance = new ProductionEmPerformance();
-        $productionEmPerformance->date_time_id = $productionDateTime->id;
-        $productionEmPerformance->em_id = $request->input('emID');
-        $productionEmPerformance->weight = $request->input('weight');
-        $productionEmPerformance->created_by_user_id = $request->input('userID');
-        $productionEmPerformance->updated_by_user_id = $request->input('userID');
-        $productionEmPerformance->save();
+
 
         return response()->json([
             'productionDate' => $productionDate,
