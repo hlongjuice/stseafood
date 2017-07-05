@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Employee extends Model
 {
     protected $table='employee';
+    protected $primaryKey='em_id';
     protected $fillable=['em_id','name','lastname','division_id','salary_type_id'];
 
     public function productionEmPerformance(){

@@ -23,6 +23,9 @@ Route::get('/test','Api\ProductionController@index');
 /*Tester*/
 Route::get('tester/employee/{number}','Tester\EmployeeController@addEmployee')
     ->name('tester.employee');
+/*Add Production Employee*/
+Route::get('tester/production_employee/{number}','Tester\EmployeeController@addProductionEmployee')
+    ->name('tester.productionEmployee');
 Route::resource('tester/production','Tester\ProductionController');
 
 Route::get('excel','ExcelController@index')->name('excel.index');

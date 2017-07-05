@@ -40,5 +40,12 @@ Route::group(['middleware' => 'auth:api'], function () {
         /*Shrimp Type*/
         Route::get('shrimp_type','Api\Production\ShrimpTypeController@getAllType')
             ->name('production.shrimp_type.getAllType');
+        /*Groups*/
+        Route::get('groups','Api\Production\EmployeeController@getGroups')
+            ->name('production.groups');
+        /*Group Member*/
+        Route::get('group/members/{id}','Api\Production\EmployeeController@getGroupMembers')
+            ->name('production.group.members');
+
     });
 });

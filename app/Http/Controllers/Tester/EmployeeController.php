@@ -6,6 +6,7 @@ use App\Models\Division;
 use App\Models\Employee;
 use App\Models\FirstName;
 use App\Models\LastName;
+use App\Models\Production\ProductionEmployee;
 use App\Models\SampleName;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -39,5 +40,18 @@ class EmployeeController extends Controller
         }
         /*Insert All Employee array to database*/
         Employee::insert($newEmployees);
+    }
+    /*Add Production Employee*/
+    public function addProductionEmployee($number){
+        $employees=Employee::inRandomOrder()->take($number)->get();
+        $productionEmployee=[];
+        foreach ($employees as $employee){
+            $productionEmployee[]=[
+                'em_id'=>$employee->em_id,
+                'group_id'=>random_int(1,10)
+            ];
+        }
+        $addProductionEmployee=new ProductionEmployee();
+        $addProductionEmployee->insert($productionEmployee);
     }
 }

@@ -9,6 +9,6 @@ class ProductionEmployee extends Model
     protected $table='production_employee';
 
     public function employee(){
-        return $this->belongsTo('App\Models\Production\Employee','em_id');
+        return $this->belongsTo('App\Models\Employee','em_id');
     }
 }
