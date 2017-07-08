@@ -110,4 +110,9 @@ class WorkController extends Controller
             ->orderBy('updated_at')->get()->groupBy('em_id');
         return response($workDetailsList);
     }
+    /*Delete Employee Weight*/
+    public function deleteWeight($weight_id){
+        $result=ProductionWorkPerformance::destroy($weight_id);
+        return response($result);
+    }
 }

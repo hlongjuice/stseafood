@@ -61,5 +61,8 @@ Route::group(['middleware' => 'auth:api'], function () {
         /*Work Details*/
         Route::get('work/date/time_period/work_list/{work_id}','Api\Production\WorkController@getWorkDetails')
             ->name('production.workDetails');
+        /*Delete Employee Weight*/
+        Route::delete('work/date/time_period/work_list/weight/{weight_id}','Api\Production\WorkController@deleteWeight')
+            ->name('production.delete.employee.weight');
     });
 });
