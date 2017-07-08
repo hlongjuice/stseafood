@@ -13,6 +13,6 @@ class ProductionDateTime extends Model
     }
 
     public function productionWork(){
-        return $this->hasMany('App\Models\Production\ProductionWork','p_work_id');
+        return $this->hasMany('App\Models\Production\ProductionWork','p_date_time_id');
     }
 }

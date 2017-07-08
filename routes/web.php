@@ -23,6 +23,8 @@ Route::get('/test','Api\ProductionController@index');
 /*Tester*/
 Route::get('tester/employee/{number}','Tester\EmployeeController@addEmployee')
     ->name('tester.employee');
+Route::get('tester/work/','Tester\WorkController@getWorkList');
+Route::get('tester/work/details/{work_id}','Tester\WorkController@getWorkDetails');
 /*Add Production Employee*/
 Route::get('tester/production_employee/{number}','Tester\EmployeeController@addProductionEmployee')
     ->name('tester.productionEmployee');

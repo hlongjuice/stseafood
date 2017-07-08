@@ -10,14 +10,13 @@ class ProductionWork extends Model
 
     public function productionDateTime()
     {
-        return $this->belongsTo('App\Models\Production\ProductionDateTime', 'p_date_time');
+        return $this->belongsTo('App\Models\Production\ProductionDateTime', 'p_date_time_id');
     }
 
     public function productionWorkPerformance()
     {
         return $this->hasMany('App\Models\Production\ProductionWorkPerformance', 'p_work_id');
     }
-
     /*Activity*/
     public function productionActivity()
     {
@@ -27,12 +26,12 @@ class ProductionWork extends Model
     /*Shrimp Type*/
     public function productionShrimpType()
     {
-        return $this->belongsTo('App\Models\Production\ProductionShrimpType', 'p_shrimp_type');
+        return $this->belongsTo('App\Models\Production\ProductionShrimpType', 'p_shrimp_type_id');
     }
 
     /*Shrimp Size*/
     public function productionShrimpSize()
     {
-        return $this->belongsTo('App\Models\Production\ProductionShrimpSize','p_shrimp_size');
+        return $this->belongsTo('App\Models\Production\ProductionShrimpSize','p_shrimp_size_id');
     }
 }

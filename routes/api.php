@@ -47,5 +47,19 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('group/members/{id}','Api\Production\EmployeeController@getGroupMembers')
             ->name('production.group.members');
 
+        /*Work*/
+        Route::post('work','Api\Production\WorkController@store')
+            ->name('production.work.store');
+        Route::get('work/employee_amount_weight/{emID}','Api\Production\WorkController@employeeAmountWeight')
+            ->name('production.work.employeeAmountWeight');
+        /*Work Date*/
+        Route::get('work/date/{date}','Api\Production\WorkController@getTimePeriod')
+            ->name('production.work.date');
+        /*Work Date Time Period*/
+        Route::get('work/date/time_period/{id}','Api\Production\WorkController@getWorkList')
+            ->name('production.work.date.time_period');
+        /*Work Details*/
+        Route::get('work/date/time_period/work_list/{work_id}','Api\Production\WorkController@getWorkDetails')
+            ->name('production.workDetails');
     });
 });
