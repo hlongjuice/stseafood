@@ -40,12 +40,6 @@ Route::group(['middleware' => 'auth:api'], function () {
         /*Shrimp Type*/
         Route::get('shrimp_type','Api\Production\ShrimpTypeController@getAllType')
             ->name('production.shrimp_type.getAllType');
-        /*Groups*/
-        Route::get('groups','Api\Production\EmployeeController@getGroups')
-            ->name('production.groups');
-        /*Group Member*/
-        Route::get('group/members/{id}','Api\Production\EmployeeController@getGroupMembers')
-            ->name('production.group.members');
 
         /*Work*/
         Route::post('work','Api\Production\WorkController@store')
@@ -64,5 +58,27 @@ Route::group(['middleware' => 'auth:api'], function () {
         /*Delete Employee Weight*/
         Route::delete('work/date/time_period/work_list/weight/{weight_id}','Api\Production\WorkController@deleteWeight')
             ->name('production.delete.employee.weight');
+
+        /*******Employee*******/
+        /*Groups*/
+        Route::get('groups','Api\Production\EmployeeController@getGroups')
+            ->name('production.groups');
+        /*Group Member*/
+        Route::get('group/members/{id}','Api\Production\EmployeeController@getGroupMembers')
+            ->name('production.group.members');
+        /*Get Non Group Employee*/
+        Route::get('group/non_group/members/{division_id}','Api\Production\EmployeeController@getNonGroupEmployee')
+            ->name('production.nonGroup.members');
+        /*Get All Division Employee*/
+        Route::get('group/all/employee/{division_id}',
+            'Api\Production\EmployeeController@getAllDivisionEmployee')
+            ->name('production.all.employee');
+        /*Add New Group Member*/
+        Route::post('group/member/add','Api\Production\EmployeeController@addGroupMember')
+            ->name('production.member.add');
+        Route::post('group/member/edit','Api\Production\EmployeeController@changeGroupMember')
+            ->name('production.member.edit');
+        Route::post('group/member/delete','Api\Production\EmployeeController@deleteGroupMember')
+            ->name('production.member.delete');
     });
 });

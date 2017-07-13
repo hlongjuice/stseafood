@@ -21,10 +21,16 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/test','Api\ProductionController@index');
 
 /*Tester*/
+Route::resource('tester/work/random','Tester\WorkRandomController');
 Route::get('tester/employee/{number}','Tester\EmployeeController@addEmployee')
     ->name('tester.employee');
 Route::get('tester/work/','Tester\WorkController@getWorkList');
 Route::get('tester/work/details/{work_id}','Tester\WorkController@getWorkDetails');
+Route::get('tester/production/non_group/employee','Tester\ProductionEmployeeController@getNonGroupEmployee');
+/*Add with firstOrCreate*/
+Route::get('tester/production/members/add','Tester\ProductionEmployeeController@addWithFirstOrCreate');
+Route::get('tester/production/members/change','Tester\ProductionEmployeeController@changeGroupMember');
+
 /*Add Production Employee*/
 Route::get('tester/production_employee/{number}','Tester\EmployeeController@addProductionEmployee')
     ->name('tester.productionEmployee');
