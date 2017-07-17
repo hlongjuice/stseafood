@@ -42,6 +42,8 @@ Route::group(['middleware' => 'auth:api'], function () {
            ->name('production.activity.update');
        Route::delete('activity/delete/{id}','Api\Production\ActivityController@delete')
            ->name('production.activity.delete');
+       Route::post('activity/add','Api\Production\ActivityController@add')
+           ->name('production.activity.add');
         /*Shrimp Size*/
         Route::get('shrimp_size','Api\Production\ShrimpSizeController@getAllSize')
             ->name('production.shrimp_size.getAllSize');
@@ -53,6 +55,8 @@ Route::group(['middleware' => 'auth:api'], function () {
             ->name('production.shrimp_size.update');
         Route::delete('shrimp_size/delete/{id}','Api\Production\ShrimpSizeController@delete')
             ->name('production.shrimp_size.delete');
+        Route::post('shrimp_size/add','Api\Production\ShrimpSizeController@add')
+            ->name('production.shrimp_size.add');
         /*Shrimp Type*/
         Route::get('shrimp_type','Api\Production\ShrimpTypeController@getAllType')
             ->name('production.shrimp_type.getAllType');
@@ -64,6 +68,8 @@ Route::group(['middleware' => 'auth:api'], function () {
             ->name('production.shrimp_type.update');
         Route::delete('shrimp_type/delete/{id}','Api\Production\ShrimpTypeController@delete')
             ->name('production.shrimp_type.delete');
+        Route::post('shrimp_type/add','Api\Production\ShrimpTypeController@add')
+            ->name('production.shrimp_type.add');
 
         /*Work*/
         Route::post('work','Api\Production\WorkController@store')

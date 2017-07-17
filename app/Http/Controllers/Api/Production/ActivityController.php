@@ -11,6 +11,14 @@ class ActivityController extends Controller
     public function index(){
 
     }
+    /*Add New Activity*/
+    public function add(Request $request){
+        $activity=new ProductionActivity();
+        $activity->name=$request->input('name');
+        $activity->status=1;
+        $activity->save();
+        return response($activity);
+    }
     public function getAllActivity(){
         $activities=ProductionActivity::all();
         return response()->json($activities);

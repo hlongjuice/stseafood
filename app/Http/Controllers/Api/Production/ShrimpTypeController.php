@@ -36,4 +36,11 @@ class ShrimpTypeController extends Controller
         $type=ProductionShrimpType::destroy($id);
         return response($type);
     }
+    public function add(Request $request){
+        $type=new ProductionShrimpType();
+        $type->name=$request->input('name');
+        $type->status=1;
+        $type->save();
+        return response($type);
+    }
 }
