@@ -12,6 +12,10 @@
                 <input value="16:00 - 17:00" name="time_period" type="text" id="time_period">
             </div>
             <div>
+                <label for="group" >กลุ่ม</label>
+                <input value="1" name="group" type="text" id="group">
+            </div>
+            <div>
                 <button type="submit">บันทึก</button>
             </div>
         </form>

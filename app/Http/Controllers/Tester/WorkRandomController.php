@@ -48,7 +48,7 @@ class WorkRandomController extends Controller
         $shrimp_type=ProductionShrimpType::inRandomOrder()->first();
         $shrimp_size=ProductionShrimpSize::inRandomOrder()->first();
         $activity=ProductionActivity::inRandomOrder()->first();
-        $random_employees=ProductionEmployee::where('group_id',1)->take(10)->get();
+        $random_employees=ProductionEmployee::where('group',$request->input('group'))->take(10)->get();
 
         for($i=0;$i<20;$i++) {
             $result = DB::transaction(function () use (
@@ -96,7 +96,7 @@ class WorkRandomController extends Controller
                 $productionWorkPerformance = new ProductionWorkPerformance();
                 $productionWorkPerformance->p_work_id = $productionWork->id;
                 $productionWorkPerformance->em_id = $random_employees->random()->em_id;
-                $productionWorkPerformance->weight = random_int(1, 20);
+                $productionWorkPerformance->weight = random_int(1, 4);
                 $productionWorkPerformance->created_by_user_id = 1;
                 $productionWorkPerformance->updated_by_user_id = 1;
                 $productionWorkPerformance->save();

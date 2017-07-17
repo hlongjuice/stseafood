@@ -21,6 +21,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/test','Api\ProductionController@index');
 
 /*Tester*/
+/*Add Random Work*/
 Route::resource('tester/work/random','Tester\WorkRandomController');
 Route::get('tester/employee/{number}','Tester\EmployeeController@addEmployee')
     ->name('tester.employee');

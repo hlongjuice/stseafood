@@ -34,12 +34,36 @@ Route::group(['middleware' => 'auth:api'], function () {
         /*Activity*/
        Route::get('activity','Api\Production\ActivityController@getAllActivity')
            ->name('production.activity.getAllActivity');
+       Route::get('activity/enable','Api\Production\ActivityController@getEnableActivity')
+           ->name('production.activity.getEnableActivity');
+       Route::patch('activity/update/status/{activity_id}','Api\Production\ActivityController@updateStatus')
+           ->name('production.activity.update.status');
+       Route::patch('activity/update/{id}','Api\Production\ActivityController@update')
+           ->name('production.activity.update');
+       Route::delete('activity/delete/{id}','Api\Production\ActivityController@delete')
+           ->name('production.activity.delete');
         /*Shrimp Size*/
         Route::get('shrimp_size','Api\Production\ShrimpSizeController@getAllSize')
             ->name('production.shrimp_size.getAllSize');
+        Route::get('shrimp_size/enable','Api\Production\ShrimpSizeController@getEnableSize')
+            ->name('production.shrimp_size.getEnableSize');
+        Route::patch('shrimp_size/update/status/{activity_id}','Api\Production\ShrimpSizeController@updateStatus')
+            ->name('production.shrimp_size.update.status');
+        Route::patch('shrimp_size/update/{id}','Api\Production\ShrimpSizeController@update')
+            ->name('production.shrimp_size.update');
+        Route::delete('shrimp_size/delete/{id}','Api\Production\ShrimpSizeController@delete')
+            ->name('production.shrimp_size.delete');
         /*Shrimp Type*/
         Route::get('shrimp_type','Api\Production\ShrimpTypeController@getAllType')
             ->name('production.shrimp_type.getAllType');
+        Route::get('shrimp_type/enable','Api\Production\ShrimpTypeController@getEnableType')
+            ->name('production.shrimp_type.getEnableType');
+        Route::patch('shrimp_type/update/status/{activity_id}','Api\Production\ShrimpTypeController@updateStatus')
+            ->name('production.shrimp_type.update.status');
+        Route::patch('shrimp_type/update/{id}','Api\Production\ShrimpTypeController@update')
+            ->name('production.shrimp_type.update');
+        Route::delete('shrimp_type/delete/{id}','Api\Production\ShrimpTypeController@delete')
+            ->name('production.shrimp_type.delete');
 
         /*Work*/
         Route::post('work','Api\Production\WorkController@store')

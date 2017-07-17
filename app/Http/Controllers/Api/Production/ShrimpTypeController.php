@@ -12,4 +12,28 @@ class ShrimpTypeController extends Controller
         $types=ProductionShrimpType::all();
         return response()->json($types);
     }
+    public function getEnableType(){
+        $types=ProductionShrimpType::where('status',1)->orderBy('name')->get();
+        return response()->json($types);
+    }
+
+    /*Update*/
+    public function update(Request $request,$id){
+        $type=ProductionShrimpType::where('id',$id)->first();
+        $type->name=$request->input('name');
+        $type->save();
+        return response($type);
+    }
+    /*Update Status*/
+    public function updateStatus(Request $request,$id){
+        $type=ProductionShrimpType::where('id',$id)->first();
+        $type->status=$request->input('status');
+        $type->save();
+        return response($type);
+    }
+    /*Delete*/
+    public function delete($id){
+        $type=ProductionShrimpType::destroy($id);
+        return response($type);
+    }
 }

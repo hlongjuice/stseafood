@@ -13,8 +13,29 @@ class ActivityController extends Controller
     }
     public function getAllActivity(){
         $activities=ProductionActivity::all();
-//        $helloWorld="Hello World";
-//        return response($helloWorld);
         return response()->json($activities);
     }
+    public function getEnableActivity(){
+        $activities=ProductionActivity::where('status',1)->get();
+        return response()->json($activities);
+    }
+    public function updateStatus(Request $request,$id){
+        $activity=ProductionActivity::where('id',$id)->first();
+        $activity->status=$request->input('status');
+        $activity->save();
+        return response($activity);
+    }
+    /*Update*/
+    public function update(Request $request,$id){
+        $activity=ProductionActivity::where('id',$id)->first();
+        $activity->name=$request->input('name');
+        $activity->save();
+        return response($activity);
+    }
+    /*Delete*/
+    public function delete($id){
+        $deleteActivity=ProductionActivity::destroy($id);
+        return response($deleteActivity);
+    }
+
 }
