@@ -27,14 +27,14 @@ class EmployeeController extends Controller
     public function getNonGroupEmployee($division_id){
         $productionEmployee=ProductionEmployee::pluck('em_id')->all();
         $nonGroupEmployee=Employee::where('division_id',$division_id)
-            ->whereNotIn('em_id',$productionEmployee)->orderBy('em_id')->paginate(100);
+            ->whereNotIn('em_id',$productionEmployee)->orderBy('em_id')->paginate(40);
         return response()->json($nonGroupEmployee);
     }
     /*Get All Division Employee*/
     public function getAllDivisionEmployee($division_id){
         $productionEmployee=Employee::with('productionEmployee')
             ->where('division_id',$division_id)
-            ->orderBy('em_id')->paginate(100);
+            ->orderBy('em_id')->paginate(40);
         return response()->json($productionEmployee);
     }
     /*Add New Group Member*/

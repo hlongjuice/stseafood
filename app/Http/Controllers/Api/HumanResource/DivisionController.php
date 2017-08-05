@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\HumanResource;
 
-use App\Models\Production\Employee;
+use App\Models\Division;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class EmployeeController extends Controller
+class DivisionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,8 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $employees=Employee::with('division')->get();
-        return  response()->json($employees);
+        $divisions=Division::all();
+        return response()->json($divisions);
     }
 
     /**
@@ -37,14 +37,9 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        $employee=new Employee();
-        $employee->em_id=$request->input('em_id');
-        $employee->name=$request->input('name');
-        $employee->lastname=$request->input('lastname');
-        $employee->division_id=$request->input('division.id');
-        $employee->created_by_user_id=$request->input('created_by_user_id');
-        $employee->updated_by_user_id=$request->input('updated_by_user_id');
-        $employee->save();
+        $division=new Division();
+        $division->name=$request->input('name');
+        $division->save();
         return response()->json();
     }
 
@@ -79,7 +74,10 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $division=Division::where('id',$id)->first();
+        $division->name=$request->input('name');
+        $division->save();
+        return response()->json();
     }
 
     /**
@@ -90,6 +88,7 @@ class EmployeeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Division::destroy($id);
+        return response()->json();
     }
 }

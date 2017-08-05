@@ -13,38 +13,49 @@ use function MongoDB\BSON\toJSON;
 
 class WorkController extends Controller
 {
-    public function create(){
+    public function create()
+    {
         return view('tester.add_work');
     }
-    public function store(Request $request){
-        $reult=[];
-        $works=ProductionDateTime::with(
+
+    public function store(Request $request)
+    {
+        $reult = [];
+        $totalREsult = [];
+        $amount_weight = 0;
+        $average_weight = 0;
+        $works = ProductionDateTime::with(
             'productionWork',
             'productionWork.productionActivity',
             'productionWork.productionShrimpSize',
             'productionWork.productionShrimpType',
             'productionWork.productionWorkPerformance'
-        )->where('id',13)->first();
-//        dd($works->productionWork);
-        foreach ($works->productionWork as $work){
-            $amountWeight=$work->productionWorkPerformance->sum('weight');
-            $averageWeight=$work->productionWorkPerformance->avg('weight');
-            $work->result= [
-                'amountWeight'=>$amountWeight,
-                'averageWeight'=>$averageWeight
-            ];
+        )->where('id', 8)->first();
+        $employees = $works->productionWork[0]
+            ->productionWorkPerformance
+            ->groupBy('em_id');
+        foreach ($employees as $employee) {
+            $amount_weight += $employee->sum('weight');
         }
-        dd($works->productionWork);
+        $average_weight = $amount_weight / $employees->count();
+        foreach ($works->productionWork as $work){
+            $work->amountWeight=number_format($amount_weight, 2);
+            $work->averageWeight=number_format($average_weight, 2);
+        }
+        dd($works->productionWork[0]);
     }
 
     /*Get Work Details*/
-    public function getWorkDetails($work_id){
-        $workDetailsList=ProductionWorkPerformance::where('p_work_id',$work_id)
-                ->get()->groupBy('em_id');
-      dd($workDetailsList->toJson());
+    public function getWorkDetails($work_id)
+    {
+        $workDetailsList = ProductionWorkPerformance::where('p_work_id', $work_id)
+            ->get()->groupBy('em_id');
+        dd($workDetailsList->toJson());
     }
+
     /*Add Work List*/
-    public function addWork(Request $request){
+    public function addWork(Request $request)
+    {
         $result = DB::transaction(function () use ($request) {
             /*Production Date*/
             $productionDate = ProductionDate::where('date', $request->input('date'))->first();

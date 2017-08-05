@@ -78,30 +78,42 @@ class WorkController extends Controller
         return response()->json($result);
     }
     /*Get Time Periods*/
-    public function getTimePeriod($date){
+    public function getTimePeriod($dateInput){
         $timePeriod=ProductionDate::with('productionDateTime')
-            ->where('date',$date)->first();
+            ->where('date',$dateInput)->first();
         return response()->json($timePeriod);
     }
 
     /*Get Work List*/
     public function getWorkList($time_period_id){
-        $amountWeight=[];
-        $averageWeight=[];
+        $amount_weight=0;
         $works=ProductionDateTime::with(
             'productionWork.productionActivity',
             'productionWork.productionShrimpSize',
             'productionWork.productionShrimpType',
             'productionWork.productionWorkPerformance'
         )->where('id',$time_period_id)->first();
-//            dd($works);
+        $employees = $works->productionWork[0]
+            ->productionWorkPerformance
+            ->groupBy('em_id');
+        foreach ($employees as $employee) {
+            $amount_weight += $employee->sum('weight');
+        }
+        $average_weight = $amount_weight / $employees->count();
         foreach ($works->productionWork as $work){
-            $amountWeight=$work->productionWorkPerformance->sum('weight');
-            $averageWeight=$work->productionWorkPerformance->avg('weight');
-            $work->amountWeight=number_format($amountWeight,2);
-            $work->averageWeight=number_format($averageWeight,2);
+            $work->amountWeight=number_format($amount_weight, 2);
+            $work->averageWeight=number_format($average_weight, 2);
         }
         return response()->json($works);
+    }
+    /*Delete Work*/
+    public function deleteWork($work_id){
+        $work=ProductionWork::with('productionWorkPerformance')->where('id',$work_id)->first();
+        $result = DB::transaction(function () use ($work) {
+            $work->productionWorkPerformance()->delete();
+            $work->delete();
+        });
+        return response()->json($result);
     }
 
     /*Get Work Details*/

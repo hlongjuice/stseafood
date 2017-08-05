@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Models\Production\Division;
+use App\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
-class DivisionController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +14,7 @@ class DivisionController extends Controller
      */
     public function index()
     {
-        $divisions=Division::all();
-        return response()->json($divisions);
+        //
     }
 
     /**
@@ -26,7 +24,7 @@ class DivisionController extends Controller
      */
     public function create()
     {
-        //
+        return view('auth.register');
     }
 
     /**
@@ -37,10 +35,22 @@ class DivisionController extends Controller
      */
     public function store(Request $request)
     {
-        $division=new Division();
-        $division->name=$request->input('name');
-        $division->save();
-        return response()->json();
+        $this->validate($request,[
+            'username'=>'required|unique:users',
+            'password'=>'required|min:3|confirmed',
+            'password_confirmation'=>'required|min:3',
+        ],[
+            'username.required'=>'กรุณากรอก Username',
+            'username.unique'=>'username นี้มีการใช้งานแล้ว',
+            'password.confirmed'=>'รหัสผ่านไม่ตรงกัน',
+            'password.required'=>'กรุณากรอกรหัสผ่าน'
+        ]);
+        $newUser=User::create([
+            'name'=>$request->input('name'),
+            'username'=>$request->input('username'),
+            'password'=>bcrypt($request->input('password'))
+        ]);
+        return redirect('/home');
     }
 
     /**
@@ -74,10 +84,7 @@ class DivisionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $division=Division::where('id',$id)->first();
-        $division->name=$request->input('name');
-        $division->save();
-        return response()->json();
+        //
     }
 
     /**
@@ -88,7 +95,6 @@ class DivisionController extends Controller
      */
     public function destroy($id)
     {
-        Division::destroy($id);
-        return response()->json();
+        //
     }
 }

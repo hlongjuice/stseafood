@@ -16,9 +16,14 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','username'
     ];
 
+    /*If use custom Auth use this method to bind it*/
+    public function findForPassport($username)
+    {
+        return $this->where('username', $username)->first();
+    }
     /**
      * The attributes that should be hidden for arrays.
      *

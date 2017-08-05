@@ -25,4 +25,7 @@ class Employee extends Model
     public function productionEmployee(){
         return $this->hasMany('App\Models\Production\ProductionEmployee','em_id');
     }
+    public function salaryType(){
+        return $this->belongsTo('App\Models\SalaryType','salary_type_id');
+    }
 }
