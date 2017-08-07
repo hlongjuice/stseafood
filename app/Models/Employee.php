@@ -28,4 +28,8 @@ class Employee extends Model
     public function salaryType(){
         return $this->belongsTo('App\Models\SalaryType','salary_type_id');
     }
+    
+    public function rank(){
+        return $this->belongsTo('App\Models\Rank','rank_id');
+    }
 }

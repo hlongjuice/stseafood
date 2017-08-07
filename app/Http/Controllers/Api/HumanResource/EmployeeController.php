@@ -30,7 +30,7 @@ class EmployeeController extends Controller
     }
     /*Get All Employees without Page*/
     public function getAllEmployeeWithOutPage(){
-        $employees = Employee::with('division', 'department', 'salaryType')
+        $employees = Employee::with('division', 'department', 'salaryType','rank')
             ->orderBy('em_id')
             ->get();
         return response()->json($employees);
