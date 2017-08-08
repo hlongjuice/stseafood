@@ -13,7 +13,7 @@ class CarRequestController extends Controller
     /*Get Car Request*/
     public function getCarRequest($userID)
     {
-        $carRequest=CarRequest::where('requested_by_user_id',$userID)->orderBy('date','desc')->paginate(100);
+        $carRequest=CarRequest::where('requested_by_user_id',$userID)->orderBy('start_date','desc')->paginate(100);
         return response()->json($carRequest);
     }
 
@@ -24,7 +24,10 @@ class CarRequestController extends Controller
             $passenger = [];
             $addPassenger = new CarRequestPassenger();
             $carRequest = CarRequest::create([
-                'date' => $request->input('date'),
+                'start_date' => $request->input('start_date'),
+                'end_date'=>$request->input('end_date'),
+                'start_time'=>$request->input('start_time'),
+                'end_time'=>$request->input('end_time'),
                 'car_type_id' => $request->input('car_type_id'),
                 'division_id' => $request->input('division_id'),
                 'em_id' => $request->input('em_id'),
@@ -32,13 +35,15 @@ class CarRequestController extends Controller
                 'destination' => $request->input('destination'),
                 'details' => $request->input('details'),
                 'requested_by_user_id' => $request->input('requested_by_user_id'),
+                'updated_by_user_id'=>$request->input('requested_by_user_id'),
+                'passenger_number'=>$request->input('passenger_number'),
                 'status_id'=>1// Waiting For Approve
             ]);
-            if ($request->has('passenger')) {
-                foreach ($request->input('passenger') as $emID) {
+            if ($request->has('passengers')) {
+                foreach ($request->input('passengers') as $newPassenger) {
                     $passenger[] = [
                         'car_request_id' => $carRequest->id,
-                        'em_id' => $emID
+                        'em_id' => $newPassenger['employeeID']
                     ];
                 }
                 $addPassenger->insert($passenger);
@@ -49,7 +54,7 @@ class CarRequestController extends Controller
     /*Update Car Request*/
     public function updateCarRequest(Request $request){
         $carRequest=CarRequest::where('id',$request->input('id'))->update([
-            'date' => $request->input('date'),
+            'date' => $request->input('start_date'),
             'car_type_id' => $request->input('car_type_id'),
             'division_id' => $request->input('division_id'),
             'em_id' => $request->input('em_id'),

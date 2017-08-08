@@ -8,9 +8,9 @@ class CarRequest extends Model
 {
     protected $table ='car_request';
     protected $fillable=[
-        'date','car_type_id','division_id',
-        'em_id','rank_id','destination','status_id',
-        'details','requested_by_user_id,updated_by_user_id'
+        'start_date','end_date','start_time','end_time','car_type_id','division_id',
+        'em_id','rank_id','destination','status_id','passenger_number',
+        'details','requested_by_user_id','updated_by_user_id'
     ];
     public function carResponse(){
         return $this->belongsToMany('App\Models\HumanResource\CarResponse','car_request_response','car_request_id','car_response_id');
