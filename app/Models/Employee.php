@@ -8,7 +8,7 @@ class Employee extends Model
 {
     protected $table='employee';
     protected $primaryKey='em_id';
-    protected $fillable=['em_id','name','lastname','division_id','salary_type_id'];
+    protected $fillable=['em_id','name','lastname','division_id','department_id','rank_id','salary_type_id'];
 
     public function productionEmPerformance(){
         return $this->hasMany('App\Models\Production\ProductionWorkPerformance','em_id');
@@ -31,5 +31,9 @@ class Employee extends Model
     
     public function rank(){
         return $this->belongsTo('App\Models\Rank','rank_id');
+    }
+    /*Car Request*/
+    public function carRequest(){
+        return $this->hasMany('App\Models\HumanResource\CarRequest','em_id');
     }
 }

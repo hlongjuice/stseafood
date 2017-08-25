@@ -22,6 +22,35 @@ Route::get('/test','Api\ProductionController@index');
 /*Register*/
 Route::resource('user','UserController');
 
+Route::group(['middleware' => 'auth'], function () {
+    Route::prefix('hr')->group(function (){
+       Route::get('import_employee','WebService\HR\EmployeeController@importEmployee')
+           ->name('hr.employee.import');
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*Tester*/
 /*Add Random Work*/
 Route::resource('tester/work/random','Tester\WorkRandomController');

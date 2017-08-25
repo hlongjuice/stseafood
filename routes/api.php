@@ -107,12 +107,23 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
     /*Human Resource*/
     Route::prefix('human_resource')->group(function () {
+        /*Rank*/
+        Route::prefix('rank')->group(function () {
+            Route::get('get_all', 'Api\HumanResource\RankController@getAllRank');
+        });
+        /*Human Car Driver*/
+        Route::prefix('driver')->group(function () {
+            Route::get('all_driver', 'Api\HumanResource\DriverController@getAllDriver')
+                ->name('human_resource.driver.getAllDriver');
+        });
         /*Employee*/
+        /*Add New Employee*/
+        Route::post('employee/add', 'Api\HumanResource\EmployeeController@addNewEmployee');
         /*Get All Employee*/
         Route::get('employee/all', 'Api\HumanResource\EmployeeController@getAllEmployee')
             ->name('human_resource.employee.all');
         /*Get All Employee without Page*/
-        Route::get('employee/all/without_page','Api\HumanResource\EmployeeController@getAllEmployeeWithOutPage')
+        Route::get('employee/all/without_page', 'Api\HumanResource\EmployeeController@getAllEmployeeWithOutPage')
             ->name('human_resource.employee.all.withoutPage');
         /*Division Employee*/
         Route::get('employee/division/{division_id}', 'Api\HumanResource\EmployeeController@getDivisionEmployee')
@@ -142,20 +153,23 @@ Route::group(['middleware' => 'auth:api'], function () {
             /*Get Car*/
             Route::get('{type}', 'Api\HumanResource\CarController@getCar')
                 ->name('human_resource.car.get');
+            /*Available Car*/
+            Route::get('available_car/{type}', 'Api\HumanResource\CarController@getAvailableCar')
+                ->name('human_resource.car.get.available');
             /*Add Car*/
             Route::post('add', 'Api\HumanResource\CarController@addCar')
                 ->name('human_resource.car.add');
             /*Update Car*/
             Route::post('update', 'Api\HumanResource\CarController@updateCar')
                 ->name('human_resource.car.update');
-            Route::post('update_status','Api\HumanResource\CarController@updateStatus')
+            Route::post('update_status', 'Api\HumanResource\CarController@updateStatus')
                 ->name('human_resource.car.updateStatus');
         });
         /*Car Type*/
-        Route::prefix('car_type')->group(function(){
+        Route::prefix('car_type')->group(function () {
             /*Get Types*/
-           Route::get('/','Api\HumanResource\CarTypeController@getCarType')
-               ->name('human_resource.car.type');
+            Route::get('/', 'Api\HumanResource\CarTypeController@getCarType')
+                ->name('human_resource.car.type');
         });
         /*Car Request*/
         Route::prefix('car_request')->group(function () {
@@ -168,27 +182,105 @@ Route::group(['middleware' => 'auth:api'], function () {
             /*Update*/
             Route::post('update', 'Api\HumanResource\CarRequestController@updateCarRequest')
                 ->name('human_resource.car_request.update');
+            /*Delete*/
+            Route::post('delete', 'Api\HumanResource\CarRequestController@deleteRequest')
+                ->name('human_resource.car_request.delete');
         });
         /*Car Response*/
         Route::prefix('car_response')->group(function () {
+            Route::post('get_response/history', 'Api\HumanResource\CarResponseController@getCarResponseByUser');
             /*Get Request*/
             Route::get('get_request/{status}', 'Api\HumanResource\CarResponseController@getCarRequest')
                 ->name('human_resource.car.car_response.getCarRequest');
+            /*Search Request By Date*/
+            Route::post('search_request/date', 'Api\HumanResource\CarResponseController@searchByDate')
+                ->name('human_resource.car.car_response.searchByDate');
             /*Get Response*/
-            Route::get('get_response/{userID}','Api\HumanResource\CarResponseController@getCarResponse')
+            Route::get('get_response/{status}', 'Api\HumanResource\CarResponseController@getCarResponse')
                 ->name('human_resource.car.car_response.getCarResponse');
+            /*Assign Car*/
+            Route::post('assign_car', 'Api\HumanResource\CarResponseController@assignCar')
+                ->name('human_resource.car.car_response.assignCar');
             /*Approve Request*/
             Route::post('approve', 'Api\HumanResource\CarResponseController@approveRequest')
                 ->name('human_resource.car.car_response.approve');
             /*Update Response*/
             Route::post('update', 'Api\HumanResource\CarResponseController@updateResponse')
                 ->name('human_resource.car.car_response.update');
+            /*Delete Assigned Request*/
+            Route::get('delete_assigned_request/{response_id}', 'Api\HumanResource\CarResponseController@deleteAssignedRequest');
+            /*Cancel Approved Response*/
+            Route::get('cancel_approved_response/{response_id}', 'Api\HumanResource\CarResponseController@cancelApprovedResponse');
             /*Delete Response*/
             Route::post('delete_response', 'Api\HumanResource\CarResponseController@deleteResponse')
                 ->name('human_resource.car.car_response.deleteResponse');
             /*Delete Response Request*/
             Route::post('delete_response_request', 'Api\HumanResource\CarResponseController@deleteResponseRequest')
                 ->name('human_resource.car.car_response.deleteResponseRequest');
+            /*Get Car Request Status*/
+            Route::get('car_request_status', 'Api\HumanResource\CarResponseController@getCarRequestStatus')
+                ->name('human_resource.car.car_response.requestStatus');
+        });
+        /*Car Access Controller*/
+        Route::prefix('car_access')->group(function () {
+            /*Get Car Departure*/
+            Route::get('get_cars/{status_id}', 'Api\HumanResource\CarAccessController@getCars');
+            /*Car Departure*/
+            Route::post('add_departure', 'Api\HumanResource\CarAccessController@addCarDeparture');
+            /*Car Arrival*/
+            Route::post('add_arrival', 'Api\HumanResource\CarAccessController@addCarArrival');
+            /*Update Car Access*/
+            Route::post('update', 'Api\HumanResource\CarAccessController@updateCarAccess');
+
+            /*Cancel Status*/
+            Route::get('cancel_status/{response_id}', 'Api\HumanResource\CarAccessController@cancelStatus');
+        });
+        /*Car Usage*/
+        Route::prefix('car_usage')->group(function () {
+            Route::post('get_by_month', 'Api\HumanResource\CarUsageController@getByMonth');
         });
     });
+    /*QC*/
+    Route::prefix('qc')->group(function () {
+
+        Route::prefix('result')->group(function () {
+            //Daily
+            Route::get('daily/{date}', 'Api\QC\RecorderResultController@getDailyResult');
+            //Monthly
+            Route::post('monthly', 'Api\QC\RecorderResultController@getMonthlyResult');
+            //Yearly
+            Route::get('yearly/{year}','Api\QC\RecorderResultController@getYearlyResult');
+
+        });
+        //Add Receiving
+        Route::post('add_receiving', 'Api\QC\ShrimpReceivingController@addReceiving');
+        //Add Extra Receiving
+        Route::post('add_extra_receiving', 'Api\QC\ShrimpReceivingController@addExtraReceiving');
+        //Show Receiving
+        Route::post('show_receiving', 'Api\QC\ShrimpReceivingController@getReceiving');
+        //Get Shrimp Receiving By ID
+        Route::post('get_shrimp_receiving_by_id', 'Api\QC\ShrimpReceivingController@getShrimpReceivingByID');
+        //Update Shrimp Receiving
+        Route::post('update_shrimp_receiving', 'Api\QC\ShrimpReceivingController@updateShrimpReceiving');
+        //Update Supplier Receiving
+        Route::post('update_supplier_receiving', 'Api\QC\ShrimpReceivingController@updateSupplierReceiving');
+        //Delete Supplier Receiving
+        Route::get('delete_supplier_receiving/{receiving_id}','Api\QC\ShrimpReceivingController@deleteSupplierReceiving');
+        //Delete Shrimp Receiving
+        Route::get('delete_shrimp_receiving/{receiving_id}','Api\QC\ShrimpReceivingController@deleteShrimpReceiving');
+
+    });
+    /*Others*/
+    Route::prefix('other')->group(function () {
+        Route::prefix('supplier')->group(function () {
+            Route::get('get_all', 'Api\Other\SupplierController@getAllSupplier');
+            //Add Supplier
+            Route::post('add_supplier', 'Api\Other\SupplierController@addSupplier');
+            //Update Supplier
+            Route::post('update_supplier', 'Api\Other\SupplierController@updateSupplier');
+        });
+
+    });
+
+
 });

@@ -3,18 +3,26 @@
 namespace App\Http\Controllers\Tester;
 
 use App\Models\Employee;
+use App\Models\HumanResource\CarUsage;
 use App\Models\Production\ProductionEmployee;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Collection;
 
 class ProductionEmployeeController extends Controller
 {
     public function getNonGroupEmployee(){
-        $productionEmployee=ProductionEmployee::pluck('em_id')->all();
-        $nonGroupEmployee=Employee::where('division_id',9)
-            ->whereNotIn('em_id',$productionEmployee)->orderBy('em_id')->paginate(20);
-        dd($nonGroupEmployee);
-//        return response()->json($nonGroupEmployee);
+        $result=collect(null);
+
+        $carUsages=CarUsage::where('car_id',4)
+            ->whereYear('date_arrival','2017')
+            ->whereMonth('date_arrival','08')
+            ->get();
+        foreach ($carUsages as $carUsage){
+            $carUsage->distance=$carUsage->mile_end-$carUsage->mile_start;
+        }
+
+        dd($carUsages);
     }
     /*Add Production Employee with firstOrCreate*/
     public function addWithFirstOrCreate(){

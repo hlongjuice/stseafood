@@ -12,4 +12,8 @@ class CarRequestPassenger extends Model
     public function carRequest(){
         return $this->belongsTo('App\Models\HumanResource\CarRequest','car_request_id');
     }
+
+    public function employee(){
+        return $this->belongsTo('App\Models\Employee','em_id');
+    }
 }

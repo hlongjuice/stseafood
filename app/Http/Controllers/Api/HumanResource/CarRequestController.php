@@ -13,7 +13,8 @@ class CarRequestController extends Controller
     /*Get Car Request*/
     public function getCarRequest($userID)
     {
-        $carRequest=CarRequest::where('requested_by_user_id',$userID)->orderBy('start_date','desc')->paginate(100);
+        $carRequest = CarRequest::with('carType', 'status', 'division', 'employee', 'rank', 'passenger.employee')->where('requested_by_user_id', $userID)
+            ->orderBy('start_date', 'desc')->orderBy('start_time', 'desc')->paginate(100);
         return response()->json($carRequest);
     }
 
@@ -25,9 +26,9 @@ class CarRequestController extends Controller
             $addPassenger = new CarRequestPassenger();
             $carRequest = CarRequest::create([
                 'start_date' => $request->input('start_date'),
-                'end_date'=>$request->input('end_date'),
-                'start_time'=>$request->input('start_time'),
-                'end_time'=>$request->input('end_time'),
+                'end_date' => $request->input('end_date'),
+                'start_time' => $request->input('start_time'),
+                'end_time' => $request->input('end_time'),
                 'car_type_id' => $request->input('car_type_id'),
                 'division_id' => $request->input('division_id'),
                 'em_id' => $request->input('em_id'),
@@ -35,25 +36,31 @@ class CarRequestController extends Controller
                 'destination' => $request->input('destination'),
                 'details' => $request->input('details'),
                 'requested_by_user_id' => $request->input('requested_by_user_id'),
-                'updated_by_user_id'=>$request->input('requested_by_user_id'),
-                'passenger_number'=>$request->input('passenger_number'),
-                'status_id'=>1// Waiting For Approve
+                'updated_by_user_id' => $request->input('requested_by_user_id'),
+                'passenger_number' => $request->input('passenger_number'),
+                'status_id' => 1// Waiting For Approve
             ]);
             if ($request->has('passengers')) {
                 foreach ($request->input('passengers') as $newPassenger) {
-                    $passenger[] = [
-                        'car_request_id' => $carRequest->id,
-                        'em_id' => $newPassenger['employeeID']
-                    ];
+                    if ($newPassenger['employeeID'] != null) {
+                        $passenger[] = [
+                            'car_request_id' => $carRequest->id,
+                            'em_id' => $newPassenger['employeeID']
+                        ];
+                    }
                 }
-                $addPassenger->insert($passenger);
+                if ($passenger != null) {
+                    $addPassenger->insert($passenger);
+                }
             }
         });
         return response()->json($result);
     }
+
     /*Update Car Request*/
-    public function updateCarRequest(Request $request){
-        $carRequest=CarRequest::where('id',$request->input('id'))->update([
+    public function updateCarRequest(Request $request)
+    {
+        $carRequest = CarRequest::where('id', $request->input('id'))->update([
             'date' => $request->input('start_date'),
             'car_type_id' => $request->input('car_type_id'),
             'division_id' => $request->input('division_id'),
@@ -63,10 +70,10 @@ class CarRequestController extends Controller
             'details' => $request->input('details'),
             'updated_by_user_id' => $request->input('updated_by_user_id')
         ]);
-        if($request->has('passenger')){
+        if ($request->has('passenger')) {
             /*Delete All Passenger*/
-            $passengers=[];
-            $addPassenger=CarRequestPassenger::where('car_request_id',$request->input('id'))->delete();
+            $passengers = [];
+            $addPassenger = CarRequestPassenger::where('car_request_id', $request->input('id'))->delete();
             /*And Add All Passenger*/
             foreach ($request->input('passenger') as $emID) {
                 $passengers[] = [
@@ -76,6 +83,16 @@ class CarRequestController extends Controller
             }
             $addPassenger->insert($passengers);
         }
+    }
+
+    /*Delete Car Request*/
+    public function deleteRequest(Request $request)
+    {
+        $result = DB::transaction(function () use ($request) {
+            CarRequest::whereIn('id', $request->input('car_request_ids'))->delete();
+            CarRequestPassenger::whereIn('car_request_id', $request->input('car_request_ids'))->delete();
+        });
+        return response()->json($result);
     }
 
 }

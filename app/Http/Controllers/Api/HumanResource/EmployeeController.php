@@ -18,6 +18,28 @@ class EmployeeController extends Controller
 //        $employees=Employee::with('division')->get();
 //        return  response()->json($employees);
     }
+    
+    /*Add New Employee*/
+    public function addNewEmployee(Request $request){
+        $this->validate($request,[
+           'em_id'=>'required|unique:employee'
+        ],[
+            'em_id.unique'=>'รหัสพนักงานซ้ำ'
+        ]);
+        $result=Employee::create([
+           'em_id'=>$request->input('em_id'),
+            'division_id'=>$request->input('division_id'),
+            'department_id'=>$request->input('department_id'),
+            'rank_id'=>$request->input('rank_id'),
+            'name'=>$request->input('name'),
+            'lastname'=>$request->input('lastname'),
+            'salary_type_id'=>$request->input('salary_type_id'),
+            'created_by_user_id'=>$request->input('user_id')
+        ]);
+        return response()->json($result);
+    }
+
+    /*Search*/
 
     /*Get All Employees*/
     public function getAllEmployee()

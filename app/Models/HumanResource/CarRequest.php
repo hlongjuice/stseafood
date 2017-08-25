@@ -12,8 +12,10 @@ class CarRequest extends Model
         'em_id','rank_id','destination','status_id','passenger_number',
         'details','requested_by_user_id','updated_by_user_id'
     ];
+    public $timestamps = false;
     public function carResponse(){
-        return $this->belongsToMany('App\Models\HumanResource\CarResponse','car_request_response','car_request_id','car_response_id');
+        return $this->belongsToMany('App\Models\HumanResource\CarResponse','car_request_response','car_request_id','car_response_id')
+            ->withTimestamps();
     }
 
     public function carType(){
@@ -27,4 +29,18 @@ class CarRequest extends Model
     public function status(){
         return $this->belongsTo('App\Models\HumanResource\CarRequestStatus','status_id');
     }
+
+    /*Divisions*/
+    public function division(){
+        return $this->belongsTo('App\Models\Division','division_id');
+    }
+    /*Employee*/
+    public function employee(){
+        return $this->belongsTo('App\Models\Employee','em_id');
+    }
+    /*Rank*/
+    public function rank(){
+        return $this->belongsTo('App\Models\Rank','rank_id');
+    }
+
 }

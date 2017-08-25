@@ -20,6 +20,18 @@ class CarController extends Controller
         }
         return response()->json($cars);
     }
+    /*Get Available Car*/
+    public function getAvailableCar($type){
+        $car=null;
+        if($type=='all'){
+            $cars=Car::where('quantity','>',0)->get();
+        }else{
+            $cars=Car::where('car_type_id',$type)->where('quantity','>',0)
+                ->orderBy('quantity','desc')
+                ->get();
+        }
+        return response()->json($cars);
+    }
     /*Add New Car*/
     public function addCar(Request $request){
         $this->validate($request,[

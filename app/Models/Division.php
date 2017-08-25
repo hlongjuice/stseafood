@@ -9,6 +9,10 @@ class Division extends Model
     protected $table='divisions';
 
     public function employees(){
-        return $this->hasMany('App\Employee','division_id');
+        return $this->hasMany('App\Models\Employee','division_id');
+    }
+    /*Car Request*/
+    public function carRequest(){
+        return $this->hasMany('App\Models\HumanResource\CarRequest','division_id');
     }
 }
