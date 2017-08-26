@@ -250,6 +250,12 @@ Route::group(['middleware' => 'auth:api'], function () {
             Route::post('monthly', 'Api\QC\RecorderResultController@getMonthlyResult');
             //Yearly
             Route::get('yearly/{year}','Api\QC\RecorderResultController@getYearlyResult');
+            //Supplier Result by Month
+            Route::post('supplier/month','Api\QC\RecorderResultController@getSupplierResultByMonth');
+            //Supplier Result by Year
+            Route::post('supplier/year','Api\QC\RecorderResultController@getSupplierResultByYear');
+            //Supplier Result by Quarter
+            Route::post('supplier/quarter','Api\QC\RecorderResultController@getSupplierResultByQuarter');
 
         });
         //Add Receiving
