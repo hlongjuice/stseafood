@@ -12,6 +12,11 @@ use DB;
 
 class WorkController extends Controller
 {
+    /*Last Insert*/
+    public function lastInsert(){
+        $lastInsert=ProductionWork::with('productionDateTime.productionDate')->orderBy('created_at','desc')->first();
+        return response()->json($lastInsert);
+    }
     /*Add new Work*/
     public function store(Request $request)
     {
@@ -27,13 +32,16 @@ class WorkController extends Controller
             /*Production Date Time*/
             $productionDateTime = ProductionDateTime::
             where('date_id', $productionDate->id)
-                ->where('time_period', $request->input('time_period'))->first();
+                ->where('time_start', $request->input('time_start'))->first();
             if ($productionDateTime == null) {
                 $productionDateTime = new ProductionDateTime();
                 $productionDateTime->date_id = $productionDate->id;
-                $productionDateTime->time_period = $request->input('time_period');
+                $productionDateTime->time_start = $request->input('time_start');
+                $productionDateTime->time_end=$request->input('time_end');
                 $productionDateTime->save();
             }
+            $productionDateTime->time_end=$request->input('time_end');
+            $productionDateTime->save();
 
             /*Production Work*/
             $productionWork = ProductionWork::where('p_date_time_id', $productionDateTime->id)

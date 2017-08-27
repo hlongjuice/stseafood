@@ -63,6 +63,8 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post('shrimp_type/add', 'Api\Production\ShrimpTypeController@add')
             ->name('production.shrimp_type.add');
 
+        /*Last Insert*/
+        Route::get('work/last_insert','Api\Production\WorkController@lastInsert');
         /*Work*/
         Route::post('work', 'Api\Production\WorkController@store')
             ->name('production.work.store');
@@ -285,7 +287,11 @@ Route::group(['middleware' => 'auth:api'], function () {
             //Update Supplier
             Route::post('update_supplier', 'Api\Other\SupplierController@updateSupplier');
         });
+    });
 
+    /*Auth*/
+    Route::prefix('auth')->group(function(){
+       Route::post('custom_logout','Auth\CustomLogOutController@logout');
     });
 
 
