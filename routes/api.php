@@ -107,6 +107,10 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post('group/member/delete', 'Api\Production\EmployeeController@deleteGroupMember')
             ->name('production.member.delete');
     });
+    /*Production Expiry Calculator*/
+    Route::prefix('production/exp_calculator')->group(function(){
+        Route::post('/','Api\Production\ExpCalculate\ExpirationController@uploadImage');
+    });
     /*Human Resource*/
     Route::prefix('human_resource')->group(function () {
         /*Rank*/

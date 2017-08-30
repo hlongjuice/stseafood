@@ -13,7 +13,7 @@ class EmployeeController extends Controller
 {
     /*Get Groups*/
     public function getGroups(){
-        $groups=ProductionEmployeeGroup::all();
+        $groups=ProductionEmployeeGroup::orderBy('id','asc')->get();
         return response()->json($groups);
     }
     /*Get Group Member*/

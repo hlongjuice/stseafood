@@ -13,10 +13,12 @@ use DB;
 class WorkController extends Controller
 {
     /*Last Insert*/
-    public function lastInsert(){
-        $lastInsert=ProductionWork::with('productionDateTime.productionDate')->orderBy('created_at','desc')->first();
+    public function lastInsert()
+    {
+        $lastInsert = ProductionWork::with('productionDateTime.productionDate')->orderBy('created_at', 'desc')->first();
         return response()->json($lastInsert);
     }
+
     /*Add new Work*/
     public function store(Request $request)
     {
@@ -37,10 +39,10 @@ class WorkController extends Controller
                 $productionDateTime = new ProductionDateTime();
                 $productionDateTime->date_id = $productionDate->id;
                 $productionDateTime->time_start = $request->input('time_start');
-                $productionDateTime->time_end=$request->input('time_end');
+                $productionDateTime->time_end = $request->input('time_end');
                 $productionDateTime->save();
             }
-            $productionDateTime->time_end=$request->input('time_end');
+            $productionDateTime->time_end = $request->input('time_end');
             $productionDateTime->save();
 
             /*Production Work*/
@@ -48,6 +50,7 @@ class WorkController extends Controller
                 ->where('p_activity_id', $request->input('activity_id'))
                 ->where('p_shrimp_type_id', $request->input('shrimp_type_id'))
                 ->where('p_shrimp_size_id', $request->input('shrimp_size_id'))
+                ->where('p_group_id', $request->input('group_id'))
                 ->first();
             if ($productionWork == null) {
                 $productionWork = new ProductionWork();
@@ -55,6 +58,7 @@ class WorkController extends Controller
                 $productionWork->p_activity_id = $request->input('activity_id');
                 $productionWork->p_shrimp_type_id = $request->input('shrimp_type_id');
                 $productionWork->p_shrimp_size_id = $request->input('shrimp_size_id');
+                $productionWork->p_group_id = $request->input('group_id');
                 $productionWork->save();
             }
             /*Production Work Performance*/
@@ -85,38 +89,48 @@ class WorkController extends Controller
         ];
         return response()->json($result);
     }
+
     /*Get Time Periods*/
-    public function getTimePeriod($dateInput){
-        $timePeriod=ProductionDate::with('productionDateTime')
-            ->where('date',$dateInput)->first();
+    public function getTimePeriod($dateInput)
+    {
+        $timePeriod = ProductionDate::with('productionDateTime')
+            ->where('date', $dateInput)->first();
         return response()->json($timePeriod);
     }
 
     /*Get Work List*/
-    public function getWorkList($time_period_id){
-        $amount_weight=0;
-        $works=ProductionDateTime::with(
+    public function getWorkList($time_period_id)
+    {
+//        $amount_weight = 0;
+        $works = ProductionDateTime::with(
             'productionWork.productionActivity',
             'productionWork.productionShrimpSize',
             'productionWork.productionShrimpType',
             'productionWork.productionWorkPerformance'
-        )->where('id',$time_period_id)->first();
-        $employees = $works->productionWork[0]
-            ->productionWorkPerformance
-            ->groupBy('em_id');
-        foreach ($employees as $employee) {
-            $amount_weight += $employee->sum('weight');
+        )->where('id', $time_period_id)->first();
+        foreach ($works->productionWork as $work) {
+            $amount_weight=0;
+            $employees = $work
+                ->productionWorkPerformance
+                ->groupBy('em_id');
+            foreach ($employees as $employee) {
+                $amount_weight += $employee->sum('weight');
+            }
+            $average_weight = $amount_weight / $employees->count();
+            $work->amountWeight = number_format($amount_weight, 2);
+            $work->averageWeight = number_format($average_weight, 2);
         }
-        $average_weight = $amount_weight / $employees->count();
-        foreach ($works->productionWork as $work){
-            $work->amountWeight=number_format($amount_weight, 2);
-            $work->averageWeight=number_format($average_weight, 2);
-        }
+//        foreach ($works->productionWork as $work) {
+//            $work->amountWeight = number_format($amount_weight, 2);
+//            $work->averageWeight = number_format($average_weight, 2);
+//        }
         return response()->json($works);
     }
+
     /*Delete Work*/
-    public function deleteWork($work_id){
-        $work=ProductionWork::with('productionWorkPerformance')->where('id',$work_id)->first();
+    public function deleteWork($work_id)
+    {
+        $work = ProductionWork::with('productionWorkPerformance')->where('id', $work_id)->first();
         $result = DB::transaction(function () use ($work) {
             $work->productionWorkPerformance()->delete();
             $work->delete();
@@ -125,14 +139,17 @@ class WorkController extends Controller
     }
 
     /*Get Work Details*/
-    public function getWorkDetails($work_id){
-        $workDetailsList=ProductionWorkPerformance::where('p_work_id',$work_id)
+    public function getWorkDetails($work_id)
+    {
+        $workDetailsList = ProductionWorkPerformance::where('p_work_id', $work_id)
             ->orderBy('updated_at')->get()->groupBy('em_id');
         return response($workDetailsList);
     }
+
     /*Delete Employee Weight*/
-    public function deleteWeight($weight_id){
-        $result=ProductionWorkPerformance::destroy($weight_id);
+    public function deleteWeight($weight_id)
+    {
+        $result = ProductionWorkPerformance::destroy($weight_id);
         return response($result);
     }
 }
