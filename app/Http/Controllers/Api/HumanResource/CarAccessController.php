@@ -13,7 +13,7 @@ class CarAccessController extends Controller
     /*Get Car Departure || Arrival*/
     public function getCars($status)
     {
-        $carDeparture = CarResponse::with('driver', 'division', 'employee', 'status', 'car.carType', 'carUsage')
+        $carDeparture = CarResponse::with('carRequest','driver', 'division', 'employee', 'status', 'car.carType', 'carUsage')
             ->where('status_id', 3)
             ->where('car_access_status_id', $status)
             ->orderBy('date', 'desc')

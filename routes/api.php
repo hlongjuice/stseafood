@@ -64,7 +64,9 @@ Route::group(['middleware' => 'auth:api'], function () {
             ->name('production.shrimp_type.add');
 
         /*Last Insert*/
-        Route::get('work/last_insert','Api\Production\WorkController@lastInsert');
+        Route::get('work/last_insert', 'Api\Production\WorkController@lastInsert');
+        /*Update Work*/
+        Route::post('work/update_work', 'Api\Production\WorkController@updateWork');
         /*Work*/
         Route::post('work', 'Api\Production\WorkController@store')
             ->name('production.work.store');
@@ -108,8 +110,8 @@ Route::group(['middleware' => 'auth:api'], function () {
             ->name('production.member.delete');
     });
     /*Production Expiry Calculator*/
-    Route::prefix('production/exp_calculator')->group(function(){
-        Route::post('/','Api\Production\ExpCalculate\ExpirationController@uploadImage');
+    Route::prefix('production/exp_calculator')->group(function () {
+        Route::post('/', 'Api\Production\ExpCalculate\ExpirationController@uploadImage');
     });
     /*Human Resource*/
     Route::prefix('human_resource')->group(function () {
@@ -255,13 +257,13 @@ Route::group(['middleware' => 'auth:api'], function () {
             //Monthly
             Route::post('monthly', 'Api\QC\RecorderResultController@getMonthlyResult');
             //Yearly
-            Route::get('yearly/{year}','Api\QC\RecorderResultController@getYearlyResult');
+            Route::get('yearly/{year}', 'Api\QC\RecorderResultController@getYearlyResult');
             //Supplier Result by Month
-            Route::post('supplier/month','Api\QC\RecorderResultController@getSupplierResultByMonth');
+            Route::post('supplier/month', 'Api\QC\RecorderResultController@getSupplierResultByMonth');
             //Supplier Result by Year
-            Route::post('supplier/year','Api\QC\RecorderResultController@getSupplierResultByYear');
+            Route::post('supplier/year', 'Api\QC\RecorderResultController@getSupplierResultByYear');
             //Supplier Result by Quarter
-            Route::post('supplier/quarter','Api\QC\RecorderResultController@getSupplierResultByQuarter');
+            Route::post('supplier/quarter', 'Api\QC\RecorderResultController@getSupplierResultByQuarter');
 
         });
         //Add Receiving
@@ -277,10 +279,121 @@ Route::group(['middleware' => 'auth:api'], function () {
         //Update Supplier Receiving
         Route::post('update_supplier_receiving', 'Api\QC\ShrimpReceivingController@updateSupplierReceiving');
         //Delete Supplier Receiving
-        Route::get('delete_supplier_receiving/{receiving_id}','Api\QC\ShrimpReceivingController@deleteSupplierReceiving');
+        Route::get('delete_supplier_receiving/{receiving_id}', 'Api\QC\ShrimpReceivingController@deleteSupplierReceiving');
         //Delete Shrimp Receiving
-        Route::get('delete_shrimp_receiving/{receiving_id}','Api\QC\ShrimpReceivingController@deleteShrimpReceiving');
+        Route::get('delete_shrimp_receiving/{receiving_id}', 'Api\QC\ShrimpReceivingController@deleteShrimpReceiving');
 
+    });
+
+    /*Engineer*/
+    Route::prefix('eng')->group(function () {
+        //Water Supply Outside
+        Route::prefix('water_supply_outside')->group(function () {
+            //Get Supply By Date
+            Route::get('get_supply_by_date/{date}', 'Api\Eng\WaterSupplyOutSideController@getSupplyByDate');
+            //Get Supply By Month
+            Route::post('get_supply_by_month', 'Api\Eng\WaterSupplyOutSideController@getSupplyByMonth');
+            //Add New Supply
+            Route::post('add_supply', 'Api\Eng\WaterSupplyOutSideController@addSupply');
+            //Update Supply
+            Route::post('update_supply', 'Api\Eng\WaterSupplyOutSideController@updateSupply');
+            //Delete Supply
+            Route::get('delete_supply/{id}', 'Api\Eng\WaterSupplyOutSideController@deleteSupply');
+        });
+        //Tank 210
+        Route::prefix('tank_210')->group(function () {
+            //Get Records
+            Route::get('get_record_by_date/{date}', 'Api\Eng\Tank210Controller@getRecordByDate');
+            //Add Records
+            Route::post('add_record', 'Api\Eng\Tank210Controller@addRecord');
+            //Update Record
+            Route::post('update_record', 'Api\Eng\Tank210Controller@updateRecord');
+            //Delete Record
+            Route::get('delete_record/{id}', 'Api\Eng\Tank210Controller@deleteRecord');
+        });
+        //River Water
+        Route::prefix('river_water')->group(function () {
+            //Get Records
+            Route::get('get_record_by_date/{date}', 'Api\Eng\RiverWaterController@getRecordByDate');
+            //Add Records
+            Route::post('add_record', 'Api\Eng\RiverWaterController@addRecord');
+            //Update Record
+            Route::post('update_record', 'Api\Eng\RiverWaterController@updateRecord');
+            //Delete Record
+            Route::get('delete_record/{id}', 'Api\Eng\RiverWaterController@deleteRecord');
+        });
+        //Water Meter
+        Route::prefix('water_meter')->group(function () {
+            //Get Records
+            Route::get('get_record_by_date/{date}', 'Api\Eng\WaterMeterController@getRecordByDate');
+            //Add Records
+            Route::post('add_record', 'Api\Eng\WaterMeterController@addRecord');
+            //Update Record
+            Route::post('update_record', 'Api\Eng\WaterMeterController@updateRecord');
+            //Delete Record
+            Route::get('delete_record/{id}', 'Api\Eng\WaterMeterController@deleteRecord');
+        });
+        //5x7
+        Route::prefix('_5x7')->group(function () {
+            //Get Records
+            Route::get('get_record_by_date/{date}', 'Api\Eng\_5x7Controller@getRecordByDate');
+            //Add Records
+            Route::post('add_record', 'Api\Eng\_5x7Controller@addRecord');
+            //Update Record
+            Route::post('update_record', 'Api\Eng\_5x7Controller@updateRecord');
+            //Delete Record
+            Route::get('delete_record/{id}', 'Api\Eng\_5x7Controller@deleteRecord');
+        });
+        //High Tank
+        Route::prefix('high_tank')->group(function () {
+            Route::get('get_record_by_date/{date}', 'Api\Eng\HighTankController@getRecordByDate');
+            //Add Records
+            Route::post('add_record', 'Api\Eng\HighTankController@addRecord');
+            //Update Record
+            Route::post('update_record', 'Api\Eng\HighTankController@updateRecord');
+            //Delete Record
+            Route::get('delete_record/{id}', 'Api\Eng\HighTankController@deleteRecord');
+        });
+        //Condens
+        Route::prefix('condens')->group(function () {
+            Route::get('get_record_by_date/{date}', 'Api\Eng\CondensController@getRecordByDate');
+            //Add Records
+            Route::post('add_record', 'Api\Eng\CondensController@addRecord');
+            //Update Record
+            Route::post('update_record', 'Api\Eng\CondensController@updateRecord');
+            //Delete Record
+            Route::get('delete_record/{id}', 'Api\Eng\CondensController@deleteRecord');
+        });
+        //Chlorine
+        Route::prefix('chlorine')->group(function () {
+            Route::get('get_record_by_date/{date}', 'Api\Eng\ChlorineController@getRecordByDate');
+            //Add Records
+            Route::post('add_record', 'Api\Eng\ChlorineController@addRecord');
+            //Update Record
+            Route::post('update_record', 'Api\Eng\ChlorineController@updateRecord');
+            //Delete Record
+            Route::get('delete_record/{id}', 'Api\Eng\ChlorineController@deleteRecord');
+        });
+        //Chlorine Lab
+        Route::prefix('chlorine_lab')->group(function () {
+            Route::get('get_record_by_date/{date}', 'Api\Eng\ChlorineLabController@getRecordByDate');
+            //Add Records
+            Route::post('add_record', 'Api\Eng\ChlorineLabController@addRecord');
+            //Update Record
+            Route::post('update_record', 'Api\Eng\ChlorineLabController@updateRecord');
+            //Delete Record
+            Route::get('delete_record/{id}', 'Api\Eng\ChlorineLabController@deleteRecord');
+        });
+        //Defrost Time
+        Route::prefix('defrost_time')->group(function(){
+            Route::get('get_record_by_date/{date}', 'Api\Eng\DefrostTimeController@getRecordByDate');
+            //Add Records
+            Route::post('add_record', 'Api\Eng\DefrostTimeController@addRecord');
+            //Update Record
+            Route::post('update_record', 'Api\Eng\DefrostTimeController@updateRecord');
+            //Delete Record
+            Route::get('delete_record/{id}', 'Api\Eng\DefrostTimeController@deleteRecord');
+        });
     });
     /*Others*/
     Route::prefix('other')->group(function () {
@@ -294,9 +407,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 
     /*Auth*/
-    Route::prefix('auth')->group(function(){
-       Route::post('custom_logout','Auth\CustomLogOutController@logout');
+    Route::prefix('auth')->group(function () {
+        Route::post('custom_logout', 'Auth\CustomLogOutController@logout');
     });
-
-
 });

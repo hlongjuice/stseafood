@@ -39,11 +39,8 @@ class WorkController extends Controller
                 $productionDateTime = new ProductionDateTime();
                 $productionDateTime->date_id = $productionDate->id;
                 $productionDateTime->time_start = $request->input('time_start');
-                $productionDateTime->time_end = $request->input('time_end');
                 $productionDateTime->save();
             }
-            $productionDateTime->time_end = $request->input('time_end');
-            $productionDateTime->save();
 
             /*Production Work*/
             $productionWork = ProductionWork::where('p_date_time_id', $productionDateTime->id)
@@ -61,6 +58,8 @@ class WorkController extends Controller
                 $productionWork->p_group_id = $request->input('group_id');
                 $productionWork->save();
             }
+            $productionWork->p_time_end = $request->input('time_end');
+            $productionWork->save();
             /*Production Work Performance*/
             $productionWorkPerformance = new ProductionWorkPerformance();
             $productionWorkPerformance->p_work_id = $productionWork->id;
@@ -102,14 +101,17 @@ class WorkController extends Controller
     public function getWorkList($time_period_id)
     {
 //        $amount_weight = 0;
-        $works = ProductionDateTime::with(
-            'productionWork.productionActivity',
-            'productionWork.productionShrimpSize',
-            'productionWork.productionShrimpType',
-            'productionWork.productionWorkPerformance'
+        $works = ProductionDateTime::with([
+                'productionWork'=>function($query){
+                  $query->orderBy('p_time_end','asc');
+                },
+                'productionWork.productionActivity',
+                'productionWork.productionShrimpSize',
+                'productionWork.productionShrimpType',
+                'productionWork.productionWorkPerformance']
         )->where('id', $time_period_id)->first();
         foreach ($works->productionWork as $work) {
-            $amount_weight=0;
+            $amount_weight = 0;
             $employees = $work
                 ->productionWorkPerformance
                 ->groupBy('em_id');
@@ -152,4 +154,41 @@ class WorkController extends Controller
         $result = ProductionWorkPerformance::destroy($weight_id);
         return response($result);
     }
+
+    /*Edit Work*/
+    public function updateWork(Request $request)
+    {
+        $result = DB::transaction(function () use ($request) {
+            /*Production Date*/
+            $productionDate = ProductionDate::where('date', $request->input('date'))->first();
+            if ($productionDate == null) {
+                $productionDate = new ProductionDate();
+                $productionDate->date = $request->input('date');
+                $productionDate->save();
+            }
+            /*Production Date Time*/
+            $productionDateTime = ProductionDateTime::
+            where('date_id', $productionDate->id)
+                ->where('time_start', $request->input('time_start'))->first();
+            if ($productionDateTime == null) {
+                $productionDateTime = new ProductionDateTime();
+                $productionDateTime->date_id = $productionDate->id;
+                $productionDateTime->time_start = $request->input('time_start');
+                $productionDateTime->save();
+            }
+            /*Production Work*/
+            $productionWork = ProductionWork::where('id', $request->input('id'))->first();
+            $productionWork->p_date_time_id = $productionDateTime->id;
+            $productionWork->p_activity_id = $request->input('activity_id');
+            $productionWork->p_shrimp_type_id = $request->input('shrimp_type_id');
+            $productionWork->p_shrimp_size_id = $request->input('shrimp_size_id');
+            $productionWork->p_group_id = $request->input('group_id');
+            $productionWork->p_time_end=$request->input('time_end');
+            $productionWork->save();
+
+        });
+        /*End Transaction*/
+        return response()->json($result);
+    }
 }
+

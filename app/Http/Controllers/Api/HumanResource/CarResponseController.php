@@ -120,9 +120,9 @@ class CarResponseController extends Controller
     {
         $carRequest = null;
         if ($status == 'all') {
-            $carRequest = CarRequest::with('carType', 'status', 'division', 'employee', 'rank', 'passenger.employee')->orderBy('start_date', 'desc')->paginate(100);
+            $carRequest = CarRequest::with('carType', 'status', 'division', 'employee', 'rank', 'passenger.employee.division')->orderBy('start_date', 'desc')->paginate(100);
         } else {
-            $carRequest = CarRequest::with('carType', 'status', 'division', 'employee', 'rank', 'passenger.employee')->where('status_id', $status)->orderBy('start_date', 'desc')->paginate(100);
+            $carRequest = CarRequest::with('carType', 'status', 'division', 'employee', 'rank', 'passenger.employee.division')->where('status_id', $status)->orderBy('start_date', 'desc')->paginate(100);
         }
         return response()->json($carRequest);
     }
@@ -130,7 +130,7 @@ class CarResponseController extends Controller
     /*Get Response*/
     public function getCarResponse($status_id)
     {
-        $carResponse = CarResponse::with('car', 'driver', 'status', 'carRequest.employee', 'carRequest.division', 'assigner', 'approver')
+        $carResponse = CarResponse::with('car', 'driver', 'status', 'carRequest.employee', 'carRequest.passenger.employee.division', 'carRequest.division', 'assigner', 'approver')
             ->where('status_id', $status_id)
             ->orderBy('date', 'desc')
             ->orderBy('time', 'desc')

@@ -8,6 +8,7 @@ use App\Models\QC\QcWaterTempReceiving;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
+use Exception;
 
 class ShrimpReceivingController extends Controller
 {
@@ -20,7 +21,6 @@ class ShrimpReceivingController extends Controller
             ];
         }
         $result = DB::transaction(function () use ($request, $waterTempInput) {
-
             $supplierReceiving = QcSupplierReceiving::where('supplier_id', $request->input('supplier_id'))
                 ->where('date', $request->input('date'))
                 ->where('pond', $request->input('sp_pond'))
@@ -35,16 +35,23 @@ class ShrimpReceivingController extends Controller
                     'date' => $request->input('date')
                 ]);
             }
+
+            $existRound = QcShrimpReceiving::where('qc_supplier_receiving_id', $supplierReceiving->id)
+                ->where('round', $request->input('round'))->first();
+            if ($existRound != null) {
+                abort(500, 'ไม่สามารถบันทึกข้อมูลได้ มีการบันทึกเที่ยวที  ' . $request->input('round') . '  แล้ว');
+            }
             //Add to Shrimp Receiving Table
             $shrimpReceiving = QcShrimpReceiving::create([
                 'created_by_user_id' => $request->input('user_id'),
                 'qc_supplier_receiving_id' => $supplierReceiving->id,
-                'time' => $request->input('time'),
+                'round' => $request->input('round'),
                 'shrimp_size' => $request->input('shrimp_size'),
                 'shrimp_big' => $request->input('shrimp_big'),
                 'shrimp_small' => $request->input('shrimp_small'),
                 'shrimp_uf' => $request->input('shrimp_uf'),
                 'df_shrimp_dead' => $request->input('df_shrimp_dead'),
+                'df_shrimp_soft_shell'=>$request->input('df_shrimp_soft_shell'),
                 'df_shrimp_semi_soft' => $request->input('df_shrimp_semi_soft'),
                 'df_shrimp_scar' => $request->input('df_shrimp_scar'),
                 'df_shrimp_bk_line' => $request->input('df_shrimp_bk_line'),
@@ -75,7 +82,9 @@ class ShrimpReceivingController extends Controller
 
     public function getReceiving(Request $request)
     {
-        $receiving = QcSupplierReceiving::with('shrimpReceiving.waterTemp', 'supplier')
+        $receiving = QcSupplierReceiving::with(['shrimpReceiving' => function ($query) {
+            $query->orderBy('round', 'asc');
+        }, 'shrimpReceiving.waterTemp', 'supplier'])
             ->whereDate('date', $request->input('date'))
             ->orderBy('date', 'desc')
             ->get();
@@ -106,14 +115,24 @@ class ShrimpReceivingController extends Controller
         $result = DB::transaction(function () use ($request, $waterTempInput) {
             //Add to Shrimp Receiving Table
             $shrimpReceiving = QcShrimpReceiving::where('id', $request->input('shrimp_receiving_id'))->first();
+            if ($shrimpReceiving->round != $request->input('round')) {
+//                abort(500,$request->input('qc_shrimp_receiving_id'));
+              $existRound = QcShrimpReceiving::where('qc_supplier_receiving_id', $request->input('qc_supplier_receiving_id'))
+                    ->where('round', $request->input('round'))->first();
+                if ($existRound != null) {
+                    abort(500, 'ไม่สามารถบันทึกข้อมูลได้ มีการบันทึกเที่ยวที  ' . $request->input('round') . '  แล้ว');
+                }
+            }
+//            abort(500,$shrimpReceiving->round);
             $shrimpReceiving->update([
                 'updated_by_user_id' => $request->input('user_id'),
-                'time' => $request->input('time'),
+                'round' => $request->input('round'),
                 'shrimp_size' => $request->input('shrimp_size'),
                 'shrimp_big' => $request->input('shrimp_big'),
                 'shrimp_small' => $request->input('shrimp_small'),
                 'shrimp_uf' => $request->input('shrimp_uf'),
                 'df_shrimp_dead' => $request->input('df_shrimp_dead'),
+                'df_shrimp_soft_shell'=>$request->input('df_shrimp_soft_shell'),
                 'df_shrimp_semi_soft' => $request->input('df_shrimp_semi_soft'),
                 'df_shrimp_scar' => $request->input('df_shrimp_scar'),
                 'df_shrimp_bk_line' => $request->input('df_shrimp_bk_line'),

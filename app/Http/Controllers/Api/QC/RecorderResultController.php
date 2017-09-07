@@ -65,7 +65,7 @@ class RecorderResultController extends Controller
                 $last_five_shrimp_dead_percent = ($last_five_shrimp_dead / $total_shrimp_weight) * 100;
             }
 
-
+            $recorder->real_shrimp_soft_percent=number_format(($recorder->real_shrimp_soft/$total_shrimp_weight)*100,2);
             $recorder->shrimp_dead = $shrimp_dead;
             $recorder->last_five_shrimp_dead = $last_five_shrimp_dead;
             $recorder->total_shrimp_dead = $total_shrimp_dead;
@@ -77,10 +77,14 @@ class RecorderResultController extends Controller
         return response()->json($recorders);
     }
 
-    public function getYearlyResult(Request $request)
+    public function getYearlyResult($year)
     {
+        $year_start=$year-3;
+        $year_end=$year;
+//        abort(500,$year_start.'-'.$year_end);
         $months = QcSupplierReceiving::with('shrimpReceiving.waterTemp', 'supplier')
-            ->whereYear('date', '>', (int)$request->input('year') - 3)
+            ->whereYear('date', '>', $year_start)
+            ->whereYear('date','<=',$year_end)
             ->orderBy('date', 'asc')
             ->get()
             ->groupBy(function ($item) {
@@ -135,14 +139,19 @@ class RecorderResultController extends Controller
             $month->put('year', (int)Carbon::createFromFormat('Y-m-d', $month[0]->date)->format('Y'));
         }
 //        $months->put('y_avg_total_shrimp_dead_percent', number_format($months->avg('m_total_shrimp_dead_percent'), 2));
+        //Group By Years
         $years = $months->groupBy(function ($item, $keys) {
             return Carbon::createFromFormat('Y-m', $keys)->format('Y');
         });
+//        $keys=$years->keys();
         $results = [];
-        foreach ($years as $year) {
-//            $year->put('y_avg_total_shrimp_dead_percent',number_format($year->avg('m_total_shrimp_dead_percent'),2));
-            $results[] = $year;
+        foreach ($years as $key=>$year) {
+            $rebuild=collect([]);
+            $rebuild->put('data',$year);
+            $rebuild->put('year',$key);
+            $results[] = $rebuild;
         }
+//        return response()->json($results);
         return response()->json($results);
     }
 
@@ -182,6 +191,7 @@ class RecorderResultController extends Controller
             }
 
 
+            $recorder->real_shrimp_soft_percent=number_format(($recorder->real_shrimp_soft/$total_shrimp_weight)*100,2);
             $recorder->shrimp_dead = $shrimp_dead;
             $recorder->last_five_shrimp_dead = $last_five_shrimp_dead;
             $recorder->total_shrimp_dead = $total_shrimp_dead;
@@ -229,6 +239,7 @@ class RecorderResultController extends Controller
             }
 
 
+            $recorder->real_shrimp_soft_percent=number_format(($recorder->real_shrimp_soft/$total_shrimp_weight)*100,2);
             $recorder->shrimp_dead = $shrimp_dead;
             $recorder->last_five_shrimp_dead = $last_five_shrimp_dead;
             $recorder->total_shrimp_dead = $total_shrimp_dead;
@@ -243,7 +254,7 @@ class RecorderResultController extends Controller
 
     public function getSupplierResultByQuarter(Request $request)
     {
-        $start_month = 0;
+     /*   $start_month = 0;
         $end_month=0;
         switch ((int)$request->input('quarter')){
             case '1':{
@@ -262,12 +273,12 @@ class RecorderResultController extends Controller
                 $start_month=10;
                 $end_month=12;
             }
-        }
+        }*/
         $recorders = QcSupplierReceiving::with('shrimpReceiving.waterTemp', 'supplier')
             ->where('supplier_id', $request->input('supplier_id'))
             ->whereYear('date', $request->input('year'))
-            ->whereMonth('date', '>=',$start_month)
-            ->whereMonth('date', '<=', $end_month)
+            ->whereMonth('date', '>=',$request->input('start_month'))
+            ->whereMonth('date', '<=', $request->input('end_month'))
             ->orderBy('date', 'asc')
             ->get();
         foreach ($recorders as $recorder) {
@@ -298,6 +309,7 @@ class RecorderResultController extends Controller
             }
 
 
+            $recorder->real_shrimp_soft_percent=number_format(($recorder->real_shrimp_soft/$total_shrimp_weight)*100,2);
             $recorder->shrimp_dead = $shrimp_dead;
             $recorder->last_five_shrimp_dead = $last_five_shrimp_dead;
             $recorder->total_shrimp_dead = $total_shrimp_dead;
