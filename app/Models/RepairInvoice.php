@@ -8,7 +8,7 @@ class RepairInvoice extends Model
 {
     protected $table="repair_invoice";
     protected $fillable=[
-        'date','time','status','approver_id','division_id','sender_id',
+        'date','time','status_id','approver_id','division_id','sender_id',
         'item','item_details','image'
     ];
     //status
