@@ -109,9 +109,35 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post('group/member/delete', 'Api\Production\EmployeeController@deleteGroupMember')
             ->name('production.member.delete');
     });
-    /*Production Expiry Calculator*/
-    Route::prefix('production/exp_calculator')->group(function () {
-        Route::post('/', 'Api\Production\ExpCalculate\ExpirationController@uploadImage');
+    /*Production Extension*/
+    Route::prefix('production/extension/')->group(function(){
+       Route::prefix('exp')->group(function(){
+           //Get
+           Route::post('get_record_by_month','Api\Production\ExpirationController@getRecordByMonth');
+           Route::get('get_record_by_date/{date}','Api\Production\ExpirationController@getRecordByDate');
+           //Add
+           Route::post('add_exp','Api\Production\ExpirationController@addExp');
+           Route::post('add_exp_image','Api\Production\ExpirationController@addExpImage');
+           //Update
+           Route::post('update_exp','Api\Production\ExpirationController@updateExp');
+           Route::post('update_exp_build','Api\Production\ExpirationController@updateExpBuild');
+           Route::post('update_exp_image','Api\Production\ExpirationController@updateExpImage');
+           //Delete
+           Route::get('delete_exp/{id}','Api\Production\ExpirationController@deleteExp');
+           Route::get('delete_exp_build/{id}','Api\Production\ExpirationController@deleteExpBuild');
+           Route::post('delete_exp_image','Api\Production\ExpirationController@deleteExpImage');
+       });
+        //Product
+        Route::prefix('product')->group(function(){
+            //Get All
+            Route::get('get_all', 'Api\Production\ProductController@getAll');
+            //Add Record
+            Route::post('add_record', 'Api\Production\ProductController@addRecord');
+            //Update Record
+            Route::post('update_record', 'Api\Production\ProductController@updateRecord');
+            //Delete Record
+            Route::get('delete_record/{id}', 'Api\Production\ProductController@deleteRecord');
+        });
     });
     /*Human Resource*/
     Route::prefix('human_resource')->group(function () {
@@ -385,8 +411,8 @@ Route::group(['middleware' => 'auth:api'], function () {
             Route::get('delete_record/{id}', 'Api\Eng\ChlorineLabController@deleteRecord');
         });
         //Defrost Time
-        Route::prefix('defrost_time')->group(function(){
-            Route::get('get_record_by_date/{date}', 'Api\Eng\DefrostTimeController@getRecordByDate');
+        Route::prefix('defrost_time')->group(function () {
+            Route::get('get_record', 'Api\Eng\DefrostTimeController@getRecord');
             //Add Records
             Route::post('add_record', 'Api\Eng\DefrostTimeController@addRecord');
             //Update Record
@@ -394,9 +420,67 @@ Route::group(['middleware' => 'auth:api'], function () {
             //Delete Record
             Route::get('delete_record/{id}', 'Api\Eng\DefrostTimeController@deleteRecord');
         });
+        //Cold Storage
+        Route::prefix('cold_storage')->group(function () {
+            Route::get('get_record_by_date/{date}', 'Api\Eng\ColdStorageTempController@getRecordByDate');
+            //Add Records
+            Route::post('add_record', 'Api\Eng\ColdStorageTempController@addRecord');
+            //Update Record
+            Route::post('update_record', 'Api\Eng\ColdStorageTempController@updateRecord');
+            //Delete Record
+            Route::get('delete_record/{id}', 'Api\Eng\ColdStorageTempController@deleteRecord');
+        });
+        //Water Cooler
+        Route::prefix('water_cooler')->group(function () {
+            Route::get('get_record_by_date/{date}', 'Api\Eng\WaterCoolerController@getRecordByDate');
+            //Add Records
+            Route::post('add_record', 'Api\Eng\WaterCoolerController@addRecord');
+            //Update Record
+            Route::post('update_record', 'Api\Eng\WaterCoolerController@updateRecord');
+            //Delete Record
+            Route::get('delete_record/{id}', 'Api\Eng\WaterCoolerController@deleteRecord');
+        });
+        //Ice Maker
+        Route::prefix('ice_maker')->group(function () {
+            Route::get('get_record_by_date/{date}', 'Api\Eng\IceMakerController@getRecordByDate');
+            //Add Records
+            Route::post('add_record', 'Api\Eng\IceMakerController@addRecord');
+            //Update Record
+            Route::post('update_record', 'Api\Eng\IceMakerController@updateRecord');
+            //Delete Record
+            Route::get('delete_record/{id}', 'Api\Eng\IceMakerController@deleteRecord');
+        });
+        //Boiler 
+        Route::prefix('boiler')->group(function () {
+            Route::get('get_record_by_date/{date}', 'Api\Eng\BoilerController@getRecordByDate');
+            //Add Records
+            Route::post('add_record', 'Api\Eng\BoilerController@addRecord');
+            //Update Record
+            Route::post('update_record', 'Api\Eng\BoilerController@updateRecord');
+            //Delete Record
+            Route::get('delete_record/{id}', 'Api\Eng\BoilerController@deleteRecord');
+        });
+        //Water Filtration
+        Route::prefix('water_filtration')->group(function () {
+            Route::get('get_record_by_date/{date}', 'Api\Eng\WaterFiltrationController@getRecordByDate');
+            //Add Records
+            Route::post('add_record', 'Api\Eng\WaterFiltrationController@addRecord');
+            //Update Record
+            Route::post('update_record', 'Api\Eng\WaterFiltrationController@updateRecord');
+            //Delete Record
+            Route::get('delete_record/{id}', 'Api\Eng\WaterFiltrationController@deleteRecord');
+        });
+        //Cold Storage Result
+        Route::prefix('result')->group(function () {
+            //Cold Storage
+            Route::get('cold_storage/{date}', 'Api\Eng\Result\ColdStorageResultController@getResultByDate');
+            //Water Usage
+            Route::post('water_usage', 'Api\Eng\Result\WaterUsageResultController@getResultByMonth');
+        });
     });
     /*Others*/
     Route::prefix('other')->group(function () {
+        //Supplier
         Route::prefix('supplier')->group(function () {
             Route::get('get_all', 'Api\Other\SupplierController@getAllSupplier');
             //Add Supplier
@@ -404,10 +488,28 @@ Route::group(['middleware' => 'auth:api'], function () {
             //Update Supplier
             Route::post('update_supplier', 'Api\Other\SupplierController@updateSupplier');
         });
+        //Repair Invoice
+        Route::prefix('repair_invoice')->group(function(){
+            //Get Record By Date
+            Route::get('get_record_by_date/{date}','Api\Other\RepairInvoiceController@getRecordByDate');
+            //Add Request
+           Route::post('add_request','Api\Other\RepairInvoiceController@addRequest');
+            //Edit Request
+            Route::post('edit_request','Api\Other\RepairInvoiceController@editRequest');
+            //Delete Request
+            Route::get('delete_request/{id}','Api\Other\RepairInvoiceController@deleteRequest');
+            //Approve
+            Route::post('approve_request','Api\Other\RepairInvoiceController@approveRequest');
+            //Cancel Approve
+            Route::get('cancel_approved/{id}','Api\Other\RepairInvoiceController@cancelApproved');
+            //Reject Request
+            Route::get('reject_request/{id}','Api\Other\RepairInvoiceController@rejectRequest');
+        });
     });
 
     /*Auth*/
     Route::prefix('auth')->group(function () {
         Route::post('custom_logout', 'Auth\CustomLogOutController@logout');
+        Route::get('get_user_details/{id}','UserController@getUserDetails');
     });
 });

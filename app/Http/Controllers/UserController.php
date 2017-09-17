@@ -16,6 +16,10 @@ class UserController extends Controller
     {
         //
     }
+    public function getUserDetails($id){
+        $user=User::with('details')->where('id',$id)->first();
+        return response()->json($user);
+    }
 
     /**
      * Show the form for creating a new resource.

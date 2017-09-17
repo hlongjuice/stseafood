@@ -46,7 +46,6 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         if ($exception->getMessage() != 'Unauthenticated.') {
-//            return response()->json([$exception->getMessage(),$exception]);
             return response()
                 ->json($exception->getMessage(), 500, [
                     'Content-Type' => 'application/json',

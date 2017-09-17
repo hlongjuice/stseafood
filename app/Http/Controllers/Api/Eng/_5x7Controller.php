@@ -12,8 +12,7 @@ class _5x7Controller extends Controller
     public function getRecordByDate($date)
     {
         $records = _5x7::whereDate('date', $date)
-            ->orderBy('time_record', 'asc')
-            ->get();
+            ->get()->sortBy('time_record', SORT_NATURAL)->values();
         return response()->json($records);
     }
 

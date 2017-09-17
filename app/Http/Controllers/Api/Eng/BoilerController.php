@@ -2,39 +2,35 @@
 
 namespace App\Http\Controllers\Api\Eng;
 
-use App\Models\Eng\WaterMeter;
+use App\Models\Eng\Boiler;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class WaterMeterController extends Controller
+class BoilerController extends Controller
 {
     //Get Record
     public function getRecordByDate($date)
     {
-        $mm_4_used = 0;
-        $mm_5_used = 0;
-        $mm_6_used = 0;
+        $boiler1_meter_used = 0;
+        $boiler2_meter_used = 0;
         //Date
         $dateInput = Carbon::createFromFormat('Y-m-d', $date);
         Carbon::setTestNow($dateInput);
         $yesterday = Carbon::yesterday()->toDateString();
-        $last_yesterday_meter = WaterMeter::whereDate('date', $yesterday)
-            ->get()
-            ->sortBy('time_record', SORT_NATURAL)->values()->last();
-        $records = WaterMeter::whereDate('date', $date)
+        $last_yesterday_used = Boiler::whereDate('date', $yesterday)
+            ->get()->sortBy('time_record', SORT_NATURAL)->values()->last();
+        $records = Boiler::whereDate('date', $date)
             ->get()->sortBy('time_record', SORT_NATURAL)->values();
-        if ($records->count() > 0 && $last_yesterday_meter->count() > 0) {
+        if ($records->count() > 0 && $last_yesterday_used != null) {
             $last_record = $records->last();
-            $mm_4_used = CalculateController::getDailyUsed($last_record->mm_4, $last_yesterday_meter->mm_4);
-            $mm_5_used = CalculateController::getDailyUsed($last_record->mm_5, $last_yesterday_meter->mm_5);
-            $mm_6_used = CalculateController::getDailyUsed($last_record->mm_6, $last_yesterday_meter->mm_6);
+            $boiler1_meter_used = CalculateController::getDailyUsed($last_record->boiler1_meter, $last_yesterday_used->boiler1_meter);
+            $boiler2_meter_used = CalculateController::getDailyUsed($last_record->boiler2_meter, $last_yesterday_used->boiler2_meter);
         }
         $results = collect([
             'data' => $records,
-            'mm_4_used' => $mm_4_used,
-            'mm_5_used' => $mm_5_used,
-            'mm_6_used' => $mm_6_used
+            'boiler1_meter_used' => $boiler1_meter_used,
+            'boiler2_meter_used' => $boiler2_meter_used
         ]);
         return response()->json($results);
     }
@@ -42,13 +38,16 @@ class WaterMeterController extends Controller
     //Add Record
     public function addRecord(Request $request)
     {
-        $result = WaterMeter::create([
+        $result = Boiler::create([
             'date' => $request->input('date'),
             'time_record' => $request->input('time_record'),
             'real_time_record' => $request->input('real_time_record'),
-            'mm_4' => $request->input('mm_4'),
-            'mm_5' => $request->input('mm_5'),
-            'mm_6' => $request->input('mm_6')
+            'boiler1' => $request->input('boiler1'),
+            'boiler1_meter' => $request->input('boiler1_meter'),
+            'boiler1_tank_l' => $request->input('boiler1_tank_l'),
+            'boiler2' => $request->input('boiler2'),
+            'boiler2_meter' => $request->input('boiler2_meter'),
+            'boiler2_tank_l' => $request->input('boiler2_tank_l'),
         ]);
         return response()->json($result);
     }
@@ -56,14 +55,17 @@ class WaterMeterController extends Controller
     //Update Record
     public function updateRecord(Request $request)
     {
-        $result = WaterMeter::where('id', $request->input('id'))
+        $result = Boiler::where('id', $request->input('id'))
             ->update([
                 'date' => $request->input('date'),
                 'time_record' => $request->input('time_record'),
                 'real_time_record' => $request->input('real_time_record'),
-                'mm_4' => $request->input('mm_4'),
-                'mm_5' => $request->input('mm_5'),
-                'mm_6' => $request->input('mm_6')
+                'boiler1' => $request->input('boiler1'),
+                'boiler1_meter' => $request->input('boiler1_meter'),
+                'boiler1_tank_l' => $request->input('boiler1_tank_l'),
+                'boiler2' => $request->input('boiler2'),
+                'boiler2_meter' => $request->input('boiler2_meter'),
+                'boiler2_tank_l' => $request->input('boiler2_tank_l'),
             ]);
         return response()->json($result);
     }
@@ -71,29 +73,29 @@ class WaterMeterController extends Controller
     //Delete Record
     public function deleteRecord($id)
     {
-        $result = WaterMeter::where('id', $id)->delete();
+        $result = Boiler::where('id', $id)->delete();
         return response()->json($result);
     }
 
-    //Get Monthly Results
+    //Get Monthly Result
     public static function getMonthlyResult($year, $month)
     {
-        $mm_4_used = 0;
-        $mm_5_used = 0;
-        $mm_6_used = 0;
+        $boiler1_meter_used = 0;
+        $boiler2_meter_used = 0;
         //Last Month
         $dateInput = Carbon::createFromFormat('Y-m-d', $year . '-' . $month . '-1');
         Carbon::setTestNow($dateInput);
         $last_month = Carbon::yesterday()->month;
         $last_year = Carbon::yesterday()->year;
-        $last_month_records = WaterMeter::whereYear('date', $last_year)
+        $last_month_records = Boiler::whereYear('date', $last_year)
             ->whereMonth('date', $last_month)
             ->get()->sortBy('date', SORT_NATURAL)->values()->groupBy('date');
         //End Last Month
         //Get Current Month
-        $records = WaterMeter::whereYear('date', $year)
+        $records = Boiler::whereYear('date', $year)
             ->whereMonth('date', $month)
             ->get()->sortBy('date', SORT_NATURAL)->values()->groupBy('date');
+
         $results = collect([]);
         if ($records->count() > 0) {
             foreach ($records as $key => $values) {
@@ -109,33 +111,30 @@ class WaterMeterController extends Controller
                 if ($i == 0) {
                     if ($last_month_records->count() > 0) {
                         $last_month_records = $last_month_records->last()->last();
-                        $mm_4_used = CalculateController::getDailyUsed($result['last_record']['mm_4'], $last_month_records['mm_4']);
-                        $mm_5_used = CalculateController::getDailyUsed($result['last_record']['mm_5'], $last_month_records['mm_5']);
-                        $mm_6_used = CalculateController::getDailyUsed($result['last_record']['mm_6'], $last_month_records['mm_6']);
+                        $boiler1_meter_used = CalculateController::getDailyUsed($result['last_record']['boiler1_meter'], $last_month_records['boiler1_meter']);
+                        $boiler2_meter_used = CalculateController::getDailyUsed($result['last_record']['boiler2_meter'], $last_month_records['boiler2_meter']);
                     }
                 } else {
-                    $mm_4_used = CalculateController::getDailyUsed($results[$i]['last_record']['mm_4'], $results[$i - 1]['last_record']['mm_4']);
-                    $mm_5_used = CalculateController::getDailyUsed($results[$i]['last_record']['mm_5'], $results[$i - 1]['last_record']['mm_5']);
-                    $mm_6_used = CalculateController::getDailyUsed($results[$i]['last_record']['mm_6'], $results[$i - 1]['last_record']['mm_6']);
+                    $boiler1_meter_used = CalculateController::getDailyUsed($results[$i]['last_record']['boiler1_meter'], $results[$i - 1]['last_record']['boiler1_meter']);
+                    $boiler2_meter_used = CalculateController::getDailyUsed($results[$i]['last_record']['boiler2_meter'], $results[$i - 1]['last_record']['boiler2_meter']);
 
                 }
                 $result->put('used', [
-                    'mm_4_used' => $mm_4_used,
-                    'mm_5_used' => $mm_5_used,
-                    'mm_6_used' => $mm_6_used
+                    'boiler1_meter_used' => $boiler1_meter_used,
+                    'boiler2_meter_used' => $boiler2_meter_used
                 ]);
                 $i++;
             }
         }
-        $results = collect([
-            'data' => $results,
-            'init' => [
-                'mm_4_used' => 0,
-                'mm_5_used' => 0,
-                'mm_6_used' => 0
+        $results=collect([
+            'data'=>$results,
+            'init'=>[
+                'boiler1_meter_used' => 0,
+                'boiler2_meter_used' => 0
             ]
         ]);
         return $results;
     }
+
 
 }

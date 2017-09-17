@@ -9,10 +9,9 @@ use App\Http\Controllers\Controller;
 class DefrostTimeController extends Controller
 {
     //Get Record
-    public function getRecordByDate($date)
+    public function getRecord()
     {
-        $records = DefrostTime::orderBy('time_record', 'asc')
-            ->get();
+        $records = DefrostTime::all()->sortBy('time_record', SORT_NATURAL)->values();
         return response()->json($records);
     }
 

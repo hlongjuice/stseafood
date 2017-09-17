@@ -15,8 +15,7 @@ class ChlorineLabController extends Controller
     public function getRecordByDate($date)
     {
         $records = EngDateTime::with('lab')->whereDate('date', $date)
-            ->orderBy('time_record', 'asc')
-            ->get();
+            ->get()->sortBy('time_record', SORT_NATURAL)->values();
         return response()->json($records);
     }
 
