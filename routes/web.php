@@ -27,6 +27,10 @@ Route::group(['middleware' => 'auth'], function () {
        Route::get('import_employee','WebService\HR\EmployeeController@importEmployee')
            ->name('hr.employee.import');
     });
+    //Dashboard
+    Route::get('dashboard','Web\DashboardController@getExcel')
+        ->name('dashboard.getExcel');
+//    Route::get('dashboard','')
 });
 
 

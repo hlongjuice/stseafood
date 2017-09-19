@@ -492,10 +492,12 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::prefix('repair_invoice')->group(function(){
             //Get Record By Date
             Route::get('get_record_by_date/{date}','Api\Other\RepairInvoiceController@getRecordByDate');
+            //Get Response By Date
+            Route::post('get_response_by_date','Api\Other\RepairInvoiceController@getResponseByDate');
             //Add Request
            Route::post('add_request','Api\Other\RepairInvoiceController@addRequest');
             //Edit Request
-            Route::post('edit_request','Api\Other\RepairInvoiceController@editRequest');
+            Route::post('update_request','Api\Other\RepairInvoiceController@editRequest');
             //Delete Request
             Route::get('delete_request/{id}','Api\Other\RepairInvoiceController@deleteRequest');
             //Approve

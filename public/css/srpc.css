@@ -1,0 +1,161 @@
+#add-personnel-btn{
+	margin-bottom: 10px;
+}
+#rss iframe body table td{
+	width:33% !important;
+}
+
+.admin-header-logo {
+	padding-top:20px;
+	padding-bottom:5px;
+}
+.admin-header-logo img{
+	width: 100px;
+	float: left;
+	margin-right: 20px;
+}
+.admin-header-logo p{
+	font-size:18px;
+	padding-left:20px;
+	float: left;
+}
+.nopadding{
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+	margin: 0 !important;
+}
+.srpc-list li{
+	padding:10px 0;
+}
+.srpc-list a{
+	color:#777;
+}
+.error{
+	color:red;
+}
+.element-hide{
+	display:none;
+}
+.admin-menu{
+	background-color: #f8f8f8;
+	border-right:1px solid #ccc;
+	padding: 20px 80px 15px 20px;
+	margin-bottom:20px;
+	min-height: 101px;
+}
+.admin-menu:nth-child(4),.admin-menu:nth-child(8){
+	border: 0;
+}
+
+.admin-menu	.icon{
+	position: absolute;
+	top: 10px;
+	right: 30px;
+	font-size: 48px;
+	line-height: 1;
+	color: #ccc;
+}
+.admin-menu .title{
+	margin-top:20px;
+	font-size:14px;
+}
+.highlight{
+	margin-top: 4px;
+	height: 2px;
+	border-radius: 2px;
+}
+.bg-color-blue{
+	background-color:#5bc0de;
+}
+.bg-color-green{
+	background-color:#5cb85c;
+}
+.bg-color-red{
+	background-color:#d9534f;
+}
+.bg-color-orange{
+	background-color:#f0ad4e;
+}
+.bg-color-black{
+	background-color:#444;
+}
+.main-body{
+	margin-top:20px;
+	margin-bottom:20px;
+}
+.nav-main{
+	margin-bottom: 0;
+	background-color: #292C37;
+	border: 0;
+	min-height: 38px;
+	font-size: 13px;
+}
+.nav-main li a{
+	color:#FFFFFF !important;
+}
+.dropdown-menu li a{
+	color:#323946 !important;
+}
+.dropdown.open>a{
+	background-color:#9F111B !important;
+}
+
+/*Module*/
+
+/*Activity Blog*/
+.activity-blog-feature-post{
+	margin-bottom:20px;
+}
+.activity-blog-feature-image {
+
+}
+
+.activity-blog-feature-image img{
+	width:100%;
+}
+.activity-blog-feature-detail{
+
+}
+.activity-blog-post{
+	margin-bottom: 20px;
+}
+.activity-blog-image img{
+	width:100%;
+	height: 254px;
+}
+.activity-blog-detail{
+
+}
+/*End Activity Blog*/
+
+/*Activity Show*/
+.activity-show img{
+	max-width:100% !important;
+}
+.panel.panel-accent-gold {
+	border-top: 3px solid #f0ad4e;
+}
+.line{
+	/*padding:0px 20px 20px 20px;*/
+}
+.line-dot{
+	border-bottom: 1px dashed #ccc;
+}
+.image-slider-group{
+	margin-bottom:20px;
+	border-bottom: 1px #ccc dashed;
+	padding-bottom: 10px;
+}
+.image-slider-group:last-child{
+	border: 0;
+}
+
+/*Divsions*/
+.division-title{
+	background-color:#9F111B;
+}
+.division-title h2{
+	color: #fff;
+}
+
+

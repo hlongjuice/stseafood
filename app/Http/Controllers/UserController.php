@@ -51,6 +51,7 @@ class UserController extends Controller
         ]);
         $newUser=User::create([
             'name'=>$request->input('name'),
+            'lastname'=>$request->input('lastname'),
             'username'=>$request->input('username'),
             'password'=>bcrypt($request->input('password'))
         ]);

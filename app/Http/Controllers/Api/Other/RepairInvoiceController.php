@@ -19,6 +19,14 @@ class RepairInvoiceController extends Controller
             ->orderBy('date','asc')->get();
         return response()->json($records);
     }
+    //Get Response By Date
+    public function getResponseByDate(Request $request){
+        $records=RepairInvoice::with('sender','approver','status','division')->whereDate('date',$request->input('date'))
+            ->where('status_id',$request->input('status_id'))
+            ->orderBy('date','asc')
+            ->get();
+        return response()->json($records);
+    }
     //Add Request
     public function addRequest(Request $request)
     {
@@ -54,7 +62,6 @@ class RepairInvoiceController extends Controller
                 ->update([
                     'date' => $request->input('date'),
                     'time' => $request->input('time'),
-                    'division_id' => $request->input('division_id'),
                     'item' => $request->input('item'),
                     'item_details' => $request->input('item_details'),
                 ]);
@@ -67,6 +74,7 @@ class RepairInvoiceController extends Controller
                 }
             }
         });
+        return response()->json($result);
     }
 
     //Delete Request
@@ -91,7 +99,8 @@ class RepairInvoiceController extends Controller
     {
         $invoice = RepairInvoice::where('id', $id)
             ->update([
-                'status_id' => $this->Waiting
+                'status_id' => $this->Waiting,
+                'approver_id'=>null
             ]);
         return response()->json($invoice);
     }
@@ -103,5 +112,6 @@ class RepairInvoiceController extends Controller
             ->update([
                 'status_id' => $this->Reject//reject Status
             ]);
+        return response()->json($invoice);
     }
 }
