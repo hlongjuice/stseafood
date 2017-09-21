@@ -1,40 +1,50 @@
-@extends('site.layouts.master_left_sidebar')
+@extends('site.layouts.master')
 @section('content')
-    {{--Customer Menu--}}
+    {{--General Menu--}}
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="panel-title">
-                ผู้ใช้ทั่วไป
+                ระบบทั่วไป
             </div>
         </div>
         <div class="panel-body">
             {{--Tracking--}}
             <div class="col-xs-12 col-md-4 admin-menu">
-                <a href="">
+                <a href="{{route('other.repair_invoice.index')}}">
                     <div class="icon">
-                        <img src="{{asset('images/icons/package2.svg')}}">
+                        {{--<img src="{{asset('images/icons/package2.svg')}}">--}}
                         {{--<i class="fa fa-map-marker" aria-hidden="true"></i>--}}
                     </div>
                     <div class="title">
-                        ระบุเส้นทางการจัดส่ง
+                        ระบบแจ้งซ่อม
                     </div>
                     <div class="highlight bg-color-blue"></div>
                 </a>
             </div>
-            {{--Tracking Histroty--}}
+        </div>
+    </div>
+
+    {{--Admin Menu--}}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">
+                Admin Menu
+            </div>
+        </div>
+        <div class="panel-body">
+            {{--Tracking--}}
             <div class="col-xs-12 col-md-4 admin-menu">
-                <a href="">
+                <a href="{{route('admin.users.index')}}">
                     <div class="icon">
-                        <img src="{{asset('images/icons/tracking_history.svg')}}">
-                        {{--<i class="fa fa-bookmark"></i>--}}
+                        {{--<img src="{{asset('images/icons/package2.svg')}}">--}}
+                        {{--<i class="fa fa-map-marker" aria-hidden="true"></i>--}}
                     </div>
                     <div class="title">
-                        ประวัติการใช้บริการ
+                        ระบบจัดการสมาชิก
                     </div>
                     <div class="highlight bg-color-blue"></div>
                 </a>
             </div>
-
         </div>
     </div>
 

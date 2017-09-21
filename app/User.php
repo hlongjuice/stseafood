@@ -16,7 +16,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'lastname','email', 'password','username'
+        'name', 'lastname','email', 'password','username','car_approve','car_assign',
+        'repair_approve','division_id'
     ];
 
     /*If use custom Auth use this method to bind it*/
@@ -33,7 +34,16 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
     
-    public function details(){
-        return $this->hasOne('App\Models\UserDetails','user_id');
+//    public function details(){
+//        return $this->hasOne('App\Models\UserDetails','user_id');
+//    }
+
+    //Division
+    public function division(){
+        return $this->belongsTo('App\Models\Division','division_id');
+    }
+    //Type
+    public function type(){
+        return $this->belongsTo('App\Models\UserType','type_id');
     }
 }

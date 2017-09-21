@@ -17,7 +17,7 @@ class UserController extends Controller
         //
     }
     public function getUserDetails($id){
-        $user=User::with('details')->where('id',$id)->first();
+        $user=User::with('division')->where('id',$id)->first();
         return response()->json($user);
     }
 

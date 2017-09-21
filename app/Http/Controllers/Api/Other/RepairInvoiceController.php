@@ -35,6 +35,7 @@ class RepairInvoiceController extends Controller
             $invoice = RepairInvoice::create([
                 'date' => $request->input('date'),
                 'time' => $request->input('time'),
+                'repair_receiver_id'=>$request->input('repair_receiver_id'),
                 'status_id' => $this->Waiting,
                 'division_id' => $request->input('division_id'),
                 'sender_id' => $request->input('sender_id'),
@@ -62,6 +63,7 @@ class RepairInvoiceController extends Controller
                 ->update([
                     'date' => $request->input('date'),
                     'time' => $request->input('time'),
+                    'repair_receiver_id'=>$request->input('repair_receiver_id'),
                     'item' => $request->input('item'),
                     'item_details' => $request->input('item_details'),
                 ]);
