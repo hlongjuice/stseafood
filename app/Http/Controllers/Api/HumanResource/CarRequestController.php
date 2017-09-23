@@ -11,9 +11,12 @@ use DB;
 class CarRequestController extends Controller
 {
     /*Get Car Request*/
-    public function getCarRequest($userID)
+    public function getCarRequest(Request $request)
     {
-        $carRequest = CarRequest::with('carType', 'status', 'division', 'employee', 'rank', 'passenger.employee')->where('requested_by_user_id', $userID)
+        $carRequest = CarRequest::with('carType', 'status', 'division', 'employee', 'rank', 'passenger.employee')
+            ->where('requested_by_user_id', $request->input('user_id'))
+            ->whereDate('start_date',$request->input('date'))
+            ->orWhere('updated_at',$request->input('date'))
             ->orderBy('start_date', 'desc')->orderBy('start_time', 'desc')->paginate(100);
         return response()->json($carRequest);
     }
@@ -60,29 +63,37 @@ class CarRequestController extends Controller
     /*Update Car Request*/
     public function updateCarRequest(Request $request)
     {
-        $carRequest = CarRequest::where('id', $request->input('id'))->update([
-            'date' => $request->input('start_date'),
-            'car_type_id' => $request->input('car_type_id'),
-            'division_id' => $request->input('division_id'),
-            'em_id' => $request->input('em_id'),
-            'rank_id' => $request->input('rank_id'),
-            'destination' => $request->input('destination'),
-            'details' => $request->input('details'),
-            'updated_by_user_id' => $request->input('updated_by_user_id')
-        ]);
-        if ($request->has('passenger')) {
-            /*Delete All Passenger*/
-            $passengers = [];
-            $addPassenger = CarRequestPassenger::where('car_request_id', $request->input('id'))->delete();
-            /*And Add All Passenger*/
-            foreach ($request->input('passenger') as $emID) {
-                $passengers[] = [
-                    'car_request_id' => $carRequest->id,
-                    'em_id' => $emID
-                ];
+        $result=DB::transaction(function() use ($request){
+            $carRequest = CarRequest::where('id', $request->input('id'))->update([
+                'start_date' => $request->input('start_date'),
+                'end_date' => $request->input('end_date'),
+                'start_time' => $request->input('start_time'),
+                'end_time' => $request->input('end_time'),
+                'car_type_id' => $request->input('car_type_id'),
+                'division_id' => $request->input('division_id'),
+                'em_id' => $request->input('em_id'),
+                'rank_id' => $request->input('rank_id'),
+                'destination' => $request->input('destination'),
+                'details' => $request->input('details'),
+                'requested_by_user_id' => $request->input('requested_by_user_id'),
+                'updated_by_user_id' => $request->input('requested_by_user_id'),
+                'passenger_number' => $request->input('passenger_number'),
+            ]);
+            if ($request->has('passenger')) {
+                /*Delete All Passenger*/
+                $passengers = [];
+                $addPassenger = CarRequestPassenger::where('car_request_id', $request->input('id'))->delete();
+                /*And Add All Passenger*/
+                foreach ($request->input('passenger') as $emID) {
+                    $passengers[] = [
+                        'car_request_id' => $carRequest->id,
+                        'em_id' => $emID
+                    ];
+                }
+                $addPassenger->insert($passengers);
             }
-            $addPassenger->insert($passengers);
-        }
+        });
+        return response()->json($result);
     }
 
     /*Delete Car Request*/

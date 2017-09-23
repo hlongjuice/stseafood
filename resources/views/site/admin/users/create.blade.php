@@ -11,6 +11,18 @@
                               action="{{ route('admin.users.store') }}">
                             {{ csrf_field() }}
 
+                            {{--User Types--}}
+                            <div class="form-group{{ $errors->has('type_id') ? ' has-error' : '' }}">
+                                <label for="divisions" class="col-md-4 control-label">ประเภทผู้ใช้งาน</label>
+
+                                <div class="col-md-6">
+                                    <select id="user_type" name="type_id" class="form-control" required>
+                                        @foreach($types as $type)
+                                            <option value="{{$type->id}}">{{$type->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                             {{--Name--}}
                             <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                                 <label for="name" class="col-md-4 control-label">ชื่อ</label>
@@ -50,18 +62,6 @@
                                         <option selected="selected" value="">เลือกฝ่าย</option>
                                         @foreach($divisions as $division)
                                             <option value="{{$division->id}}">{{$division->name}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            {{--User Types--}}
-                            <div class="form-group{{ $errors->has('type_id') ? ' has-error' : '' }}">
-                                <label for="divisions" class="col-md-4 control-label">ประเภทผู้ใช้งาน</label>
-
-                                <div class="col-md-6">
-                                    <select id="divisions" name="type_id" class="form-control" required>
-                                        @foreach($types as $type)
-                                            <option value="{{$type->id}}">{{$type->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>

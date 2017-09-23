@@ -208,7 +208,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         /*Car Request*/
         Route::prefix('car_request')->group(function () {
             /*Get Car Request*/
-            Route::get('{userID}', 'Api\HumanResource\CarRequestController@getCarRequest')
+            Route::post('/', 'Api\HumanResource\CarRequestController@getCarRequest')
                 ->name('human_resource.car_request.get');
             /*Add Car Request*/
             Route::post('add', 'Api\HumanResource\CarRequestController@addCarRequest')
@@ -258,13 +258,23 @@ Route::group(['middleware' => 'auth:api'], function () {
         /*Car Access Controller*/
         Route::prefix('car_access')->group(function () {
             /*Get Car Departure*/
-            Route::get('get_cars/{status_id}', 'Api\HumanResource\CarAccessController@getCars');
+            Route::post('get_cars', 'Api\HumanResource\CarAccessController@getCars');
             /*Car Departure*/
             Route::post('add_departure', 'Api\HumanResource\CarAccessController@addCarDeparture');
             /*Car Arrival*/
             Route::post('add_arrival', 'Api\HumanResource\CarAccessController@addCarArrival');
             /*Update Car Access*/
             Route::post('update', 'Api\HumanResource\CarAccessController@updateCarAccess');
+            //Update Departure
+            Route::post('update_departure','Api\HumanResource\CarAccessController@updateDeparture');
+            //Get Car Arrival By Date
+            Route::post('get_car_arrival_by_date','Api\HumanResource\CarAccessController@getCarArrivalByDate');
+            //Add Gas Fill
+            Route::post('add_gas_fill','Api\HumanResource\CarAccessController@addGasFill');
+            //Update Gas Fill
+            Route::post('update_gas_fill','Api\HumanResource\CarAccessController@updateGasFill');
+            //Delete Gas Fill
+            Route::get('delete_gas_fill/{id}','Api\HumanResource\CarAccessController@deleteGasFill');
 
             /*Cancel Status*/
             Route::get('cancel_status/{response_id}', 'Api\HumanResource\CarAccessController@cancelStatus');

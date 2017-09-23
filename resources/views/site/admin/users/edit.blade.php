@@ -13,7 +13,7 @@
                             {{ csrf_field() }}
 
                             {{--User Types--}}
-                            <div class="form-group{{ $errors->has('type_id') ? ' has-error' : '' }}">
+                            <div class="form-group">
                                 <label for="divisions" class="col-md-4 control-label">ประเภทผู้ใช้งาน</label>
                                 <div class="col-md-6">
                                     <select id="divisions" name="type_id" class="form-control" required>

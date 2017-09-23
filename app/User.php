@@ -17,7 +17,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name', 'lastname','email', 'password','username','car_approve','car_assign',
-        'repair_approve','division_id'
+        'repair_approve','division_id','type_id'
     ];
 
     /*If use custom Auth use this method to bind it*/

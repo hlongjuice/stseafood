@@ -17,7 +17,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users=User::with('division')->orderBy('name','asc')->paginate(50);
+        $users=User::with('division')
+        ->where('master_admin',null)->orderBy('name','asc')->paginate(50);
 //        dd($users);
         return view('site.admin.users.index')->with('users',$users);
     }
@@ -95,7 +96,8 @@ class UserController extends Controller
         $divisions=Division::all();
         return view('site.admin.users.edit')->with([
             'user'=>$user,
-            'divisions'=>$divisions
+            'divisions'=>$divisions,
+            'types'=>$types
         ]);
     }
 
