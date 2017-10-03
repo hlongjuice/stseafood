@@ -319,6 +319,5 @@ class RecorderResultController extends Controller
             $recorder->last_five_shrimp_dead_percent = number_format($last_five_shrimp_dead_percent, 2);
         }
         return response()->json($recorders);
-
     }
 }

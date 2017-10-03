@@ -21,8 +21,9 @@ class WaterSupplyOutSideController extends Controller
         $m_20_used = 0;
         $m_21_used = 0;
         $dateInput = Carbon::createFromFormat('Y-m-d', $date);
-        Carbon::setTestNow($dateInput);
-        $yesterday = Carbon::yesterday()->toDateString();
+//        Carbon::setTestNow($dateInput);
+//        $yesterday = Carbon::yesterday()->toDateString();
+        $yesterday=$dateInput->subDay(1)->toDateString();
         $last_yesterday_meter = WaterSupplyOutSide::whereDate('date', $yesterday)
             ->get()
             ->sortBy('time_record', SORT_NATURAL)->values()->last();
@@ -49,9 +50,11 @@ class WaterSupplyOutSideController extends Controller
             'm_19_used' => $m_19_used,
             'm_20_used' => $m_20_used,
             'm_21_used' => $m_21_used,
-            'last' => $last_yesterday_meter
+            'last' => $last_yesterday_meter,
+            'yesterday'=>$yesterday,
+            'yesterday_meter'=>$last_yesterday_meter,
+            'date'=>$date
         ]);
-        //  return response()->json($supplies);
         return response()->json($recorders);
     }
 
@@ -120,9 +123,11 @@ class WaterSupplyOutSideController extends Controller
         $m_21_used = 0;
         //Last Month
         $dateInput = Carbon::createFromFormat('Y-m-d', $year . '-' . $month . '-1');
-        Carbon::setTestNow($dateInput);
-        $last_month = Carbon::yesterday()->month;
-        $last_year = Carbon::yesterday()->year;
+//        Carbon::setTestNow($dateInput);
+//        $last_month = Carbon::yesterday()->month;
+//        $last_year = Carbon::yesterday()->year;
+        $last_month=$dateInput->subDay(1)->month;
+        $last_year=$dateInput->subDay(1)->year;
         $last_month_records = WaterSupplyOutSide::whereYear('date', $last_year)
             ->whereMonth('date', $last_month)
             ->get()->sortBy('date', SORT_NATURAL)->values()->groupBy('date');

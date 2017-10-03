@@ -9,9 +9,15 @@ use App\Http\Controllers\Controller;
 class DefrostTimeController extends Controller
 {
     //Get Record
-    public function getRecord()
+    public function getRecord($id)
     {
-        $records = DefrostTime::all()->sortBy('time_record', SORT_NATURAL)->values();
+        $records=[];
+        if($id=='all'){
+            $records=DefrostTime::all()->sortBy('time_record', SORT_NATURAL)->values();
+        }else{
+            $records = DefrostTime::where('storage_id',$id)->get()->sortBy('time_record', SORT_NATURAL)->values();
+        }
+
         return response()->json($records);
     }
 
@@ -19,7 +25,8 @@ class DefrostTimeController extends Controller
     public function addRecord(Request $request)
     {
         $result = DefrostTime::create([
-            'time_record'=>$request->input('time_record')
+            'time_record'=>$request->input('time_record'),
+            'storage_id'=>$request->input('storage_id')
         ]);
         return response()->json($result);
     }
@@ -30,6 +37,7 @@ class DefrostTimeController extends Controller
         $result = DefrostTime::where('id',$request->input('id'))
             ->update([
                 'time_record' => $request->input('time_record'),
+                'storage_id'=>$request->input('storage_id')
             ]);
         return response()->json($result);
     }

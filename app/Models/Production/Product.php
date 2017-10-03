@@ -8,7 +8,7 @@ class Product extends Model
 {
     protected $table="production_product";
     protected $fillable=[
-      'name','date_format','exp_day'
+      'name','date_format','exp_date'
     ];
 
     public function expiration(){

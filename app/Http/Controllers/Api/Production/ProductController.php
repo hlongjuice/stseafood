@@ -21,7 +21,7 @@ class ProductController extends Controller
         $result = Product::create([
             'name'=>$request->input('name'),
             'date_format'=>$request->input('date_format'),
-            'exp_day'=>$request->input('exp_day')
+            'exp_date'=>$request->input('exp_date')
         ]);
         return response()->json($result);
     }
@@ -33,7 +33,7 @@ class ProductController extends Controller
             ->update([
                 'name'=>$request->input('name'),
                 'date_format'=>$request->input('date_format'),
-                'exp_day'=>$request->input('exp_day')
+                'exp_date'=>$request->input('exp_date')
             ]);
         return response()->json($result);
     }

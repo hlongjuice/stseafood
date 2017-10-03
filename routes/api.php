@@ -422,7 +422,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         });
         //Defrost Time
         Route::prefix('defrost_time')->group(function () {
-            Route::get('get_record', 'Api\Eng\DefrostTimeController@getRecord');
+            Route::get('get_record/{id}', 'Api\Eng\DefrostTimeController@getRecord');
             //Add Records
             Route::post('add_record', 'Api\Eng\DefrostTimeController@addRecord');
             //Update Record
@@ -516,6 +516,8 @@ Route::group(['middleware' => 'auth:api'], function () {
             Route::get('cancel_approved/{id}','Api\Other\RepairInvoiceController@cancelApproved');
             //Reject Request
             Route::get('reject_request/{id}','Api\Other\RepairInvoiceController@rejectRequest');
+            //Delete Photo
+            Route::get('delete_photo/{id}','Api\Other\RepairInvoiceController@deletePhoto');
         });
     });
 
@@ -523,5 +525,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::prefix('auth')->group(function () {
         Route::post('custom_logout', 'Auth\CustomLogOutController@logout');
         Route::get('get_user_details/{id}','UserController@getUserDetails');
+        Route::post('change_password/{id}','Web\Admin\UserController@updatePassword');
     });
 });

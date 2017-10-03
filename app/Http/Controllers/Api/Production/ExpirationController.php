@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Production;
 use App\Models\Production\Expiration;
 use App\Models\Production\ExpirationBuild;
 use App\Models\Production\ExpirationImage;
+use App\Models\Production\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -33,14 +34,14 @@ class ExpirationController extends Controller
     //get By Date
     public function getRecordByDate($date)
     {
-        $records = Expiration::with('product', 'build', 'image')->whereDate('updated_at', $date)
+        $records = Expiration::with('product', 'build', 'image')
             ->orWhere('mfd', $date)
             ->orderBy('updated_at', 'desc')->get()->groupBy('product.name');
         $results = collect([]);
         foreach ($records as $product_name => $values) {
             foreach ($values as $record) {
                 $round_group = $record['build']->sortBy('round')->groupBy('round');
-                $exp_date = Carbon::createFromFormat('Y-m-d', $record->mfd)->addDay($record->product->exp_day)->toDateString();
+                $exp_date = Carbon::createFromFormat('Y-m-d', $record->mfd)->addMonth($record->exp_date)->toDateString();
                 $rounds = collect([]);
                 foreach ($round_group as $key => $group) {
                     $sumOutside = $group->sum('q_outside');
@@ -73,6 +74,7 @@ class ExpirationController extends Controller
     public function addExp(Request $request)
     {
         $result = DB::transaction(function () use ($request) {
+            $product=Product::where('id',$request->input('product_id'))->first();
             $exp = Expiration::where('product_id', $request->input('product_id'))
                 ->where('mfd', $request->input('mfd'))
                 ->where('code', $request->input('code'))
@@ -82,6 +84,8 @@ class ExpirationController extends Controller
                     'product_id' => $request->input('product_id'),
                     'mfd' => $request->input('mfd'),
                     'code' => $request->input('code'),
+                    'exp_date'=>$product->exp_date,
+                    'date_format'=>$product->date_format
                 ]);
             }
             $insideInput = 0;

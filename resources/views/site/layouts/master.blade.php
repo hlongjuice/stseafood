@@ -63,6 +63,8 @@
 {{--<script src="{{asset('js/jquery.min.js')}}"></script>--}}
 <script src="{{asset('js/bootstrap.min.js')}}"></script>
 <script src="{{ asset('js/jquery-ui.min.js')}}"></script>
+
+{{-- ******App.js******--}}
 {{--Google Map Javascript Api--}}
 <script type="text/javascript"
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD5p15SZ4mJm6ZqoIa5STnINkW-OcEBNCw&libraries=geometry,places"></script>
@@ -72,9 +74,30 @@
 <script src="{{ asset('js/gmap.js')}}"></script>
 {{--Data Table--}}
 <script src="{{asset('extension/datatable/datatables.min.js')}}"></script>
+<script>
+    $(document).ready(function () {
+        $.datepicker.regional['th'] ={
+            changeMonth: true,
+            changeYear: true,
+            showOn: "ปุ่ม",
+            buttonImage: 'images/calendar.gif',
+            buttonImageOnly: true,
+//            dateFormat: 'dd M yy',
+            dateFormat:'yy-mm-dd',
+            dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
+            dayNamesMin: ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'],
+            monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
+            monthNamesShort: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+            constrainInput: true,
+            yearRange: '-20:+0',
+            buttonText: 'เลือก'
+        };
 
+        $.datepicker.setDefaults($.datepicker.regional['th']);
+    });
+</script>
 @yield('script')
-<script src="{{asset('template/gentelella/build/js/custom.js')}}"></script>
+{{--<script src="{{asset('template/gentelella/build/js/custom.js')}}"></script>--}}
 </body>
 
 </html>

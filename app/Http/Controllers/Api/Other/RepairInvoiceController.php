@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Intervention\Image\Facades\Image;
 use DB;
+use File;
 
 class RepairInvoiceController extends Controller
 {
@@ -15,7 +16,7 @@ class RepairInvoiceController extends Controller
     private $Reject=3;
     //Get Record By Date
     public function getRecordByDate($date){
-        $records=RepairInvoice::with('status')->whereDate('date',$date)
+        $records=RepairInvoice::with('sender','approver','status','division')->whereDate('date',$date)
             ->orderBy('date','asc')->get();
         return response()->json($records);
     }
@@ -43,7 +44,7 @@ class RepairInvoiceController extends Controller
                 'item_details' => $request->input('item_details'),
             ]);
             if ($request->input('image')) {
-                $path = 'images/repair_invoice/' . $request->input('date') . '-' . $strRand . $request->input('item') . '.jpg';
+                $path = 'images/repair_invoice/' . $request->input('date') . '_' . $strRand . $request->input('item') . '.jpg';
                 $newImage = Image::make($request->input('image'))->save($path);
                 if ($newImage) {
                     $invoice->image = $path;
@@ -60,7 +61,8 @@ class RepairInvoiceController extends Controller
         $result = DB::transaction(function () use ($request) {
             $strRand = str_random(4);
             $invoice = RepairInvoice::where('id', $request->input('id'))
-                ->update([
+                ->first();
+            $invoice->update([
                     'date' => $request->input('date'),
                     'time' => $request->input('time'),
                     'repair_receiver_id'=>$request->input('repair_receiver_id'),
@@ -68,7 +70,7 @@ class RepairInvoiceController extends Controller
                     'item_details' => $request->input('item_details'),
                 ]);
             if ($request->input('image')) {
-                $path = 'images/repair_invoice/' . $request->input('date') . '-' . $strRand . $request->input('item') . '.jpg';
+                $path = 'images/repair_invoice/' . $request->input('date') . '_' . $strRand . $request->input('item') . '.jpg';
                 $newImage = Image::make($request->input('image'))->save($path);
                 if ($newImage) {
                     $invoice->image = $path;
@@ -115,5 +117,18 @@ class RepairInvoiceController extends Controller
                 'status_id' => $this->Reject//reject Status
             ]);
         return response()->json($invoice);
+    }
+
+    //Delete Photo
+    public function deletePhoto($id){
+        $result=DB::transaction(function() use($id){
+            $invoice=RepairInvoice::where('id',$id)->first();
+            $delete_result=File::delete($invoice->image);
+            if($delete_result){
+                $invoice->image=null;
+                $invoice->save();
+            }
+        });
+        return response()->json($result);
     }
 }

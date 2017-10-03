@@ -33,6 +33,7 @@ class CarAccessController extends Controller
                 'date_departure' => $request->input('date_departure'),
                 'time_departure' => $request->input('time_departure'),
                 'mile_start' => $request->input('mile_start'),
+                'gas_fill_status'=>0,
                 'recorded_by_user_id' => $request->input('user_id')
             ]);
             CarResponse::where('id', $request->input('response_id'))
@@ -175,6 +176,8 @@ class CarAccessController extends Controller
             'distance_per_litre' => $distance_per_litre,
             'price_per_distance' => $price_per_distance,
             'gas_fill_status' => $gas_fill_status,
+            'gas_fill_time'=>$request->input('gas_fill_time'),
+            'gas_fill_by'=>$request->input('gas_fill_by'),
             'gas_unit_price' => $request->input('gas_unit_price') ? $request->input('gas_unit_price') : 0,
             'gas_total_price' => $request->input('gas_total_price') ? $request->input('gas_total_price') : 0,
             'gas_fill' => $request->input('gas_fill') ? $request->input('gas_fill') : 0,
@@ -202,6 +205,8 @@ class CarAccessController extends Controller
             'distance_per_litre' => $distance_per_litre,
             'price_per_distance' => $price_per_distance,
             'gas_fill_status' => $gas_fill_status,
+            'gas_fill_time'=>$request->input('gas_fill_time'),
+            'gas_fill_by'=>$request->input('gas_fill_by'),
             'gas_unit_price' => $request->input('gas_unit_price') ? $request->input('gas_unit_price') : 0,
             'gas_total_price' => $request->input('gas_total_price') ? $request->input('gas_total_price') : 0,
             'gas_fill' => $request->input('gas_fill') ? $request->input('gas_fill') : 0,
@@ -222,7 +227,9 @@ class CarAccessController extends Controller
                 'gas_unit_price' => 0,
                 'gas_total_price' => 0,
                 'gas_fill' => 0,
-                'gas_station' => "",
+                'gas_station' => "",           
+                'gas_fill_time'=>null,
+                'gas_fill_by'=>"",
             ]);
         return response()->json($carUsage);
     }

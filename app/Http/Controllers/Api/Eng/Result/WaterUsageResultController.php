@@ -10,35 +10,59 @@ use App\Http\Controllers\Api\Eng\WaterCoolerController;
 use App\Http\Controllers\Api\Eng\WaterFiltrationController;
 use App\Http\Controllers\Api\Eng\WaterMeterController;
 use App\Http\Controllers\Api\Eng\WaterSupplyOutSideController;
+use App\Http\Controllers\WebService\DateController;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class WaterUsageResultController extends Controller
 {
+    public static function getResult(Request $request){
+       $waterUsage=new WaterUsageResultController();
+        return $waterUsage->getResultByMonth($request);
+    }
     public function getResultByMonth(Request $request)
     {
+        $month=$request->input('month');
+        $year=$request->input('year');
+        $th_months = DateController::getFullThaiMonths();
+        $thai_month = "";
+        foreach ($th_months as $key => $value) {
+            if ($month == $key + 1) {
+                $thai_month = $value;
+            }
+        }
+        $results=$this->calculateResult($month,$year);
+        $results->put('thai_month',$thai_month);
+        $results->put('year',$year);
+        return response()->json($results);
+    }
+    
+    public function calculateResult($month,$year){
         /*Initial*/
-        $dateInput = Carbon::createFromFormat('Y-m-d', $request->input('year') . '-' . $request->input('month') . '-1');
-        Carbon::setTestNow($dateInput);
-        $totalDay = Carbon::today()->daysInMonth;
-        $dateString = Carbon::today()->toDateString();
+        $dateInput = Carbon::createFromFormat('Y-m-d', $year . '-' . $month . '-1');
+//        Carbon::setTestNow($dateInput);
+//        $totalDay = Carbon::today()->daysInMonth;
+//        $dateString = Carbon::today()->toDateString();
+        $totalDay=$dateInput->daysInMonth;
+        $dateString=$dateInput->toDateString();
 
         //All Used
         $records = collect([
-            'ws_outside' => WaterSupplyOutSideController::getMonthlyResult($request->input('year'), $request->input('month')),
-            'water_filtration' => WaterFiltrationController::getMonthlyResult($request->input('year'), $request->input('month')),
-            'condens' => CondensController::getMonthlyResult($request->input('year'), $request->input('month')),
-            'boiler' => BoilerController::getMonthlyResult($request->input('year'), $request->input('month')),
-            'tank_210' => Tank210Controller::getMonthlyResult($request->input('year'), $request->input('month')),
-            'water_meter' => WaterMeterController::getMonthlyResult($request->input('year'), $request->input('month')),
-            'ice_maker' => IceMakerController::getMonthlyResult($request->input('year'), $request->input('month')),
-            'water_cooler' => WaterCoolerController::getMonthlyResult($request->input('year'), $request->input('month')),
+            'ws_outside' => WaterSupplyOutSideController::getMonthlyResult($year, $month),
+            'water_filtration' => WaterFiltrationController::getMonthlyResult($year, $month),
+            'condens' => CondensController::getMonthlyResult($year, $month),
+            'boiler' => BoilerController::getMonthlyResult($year, $month),
+            'tank_210' => Tank210Controller::getMonthlyResult($year, $month),
+            'water_meter' => WaterMeterController::getMonthlyResult($year, $month),
+            'ice_maker' => IceMakerController::getMonthlyResult($year, $month),
+            'water_cooler' => WaterCoolerController::getMonthlyResult($year, $month),
             'day' => $totalDay,
             'dateString' => $dateString
         ]);
 
         $allDate = collect([]);
+        $dateNow=$dateString;
         for ($day = 1; $day <= $totalDay; $day++) {
             $ws_outside = $records['ws_outside'];
             $water_filtration = $records['water_filtration'];
@@ -48,13 +72,13 @@ class WaterUsageResultController extends Controller
             $water_meter = $records['water_meter'];
             $ice_maker = $records['ice_maker'];
             $water_cooler = $records['water_cooler'];
-            //Set Date
+            //Set Date`
             if ($day != 1) {
-                $nextDate = Carbon::createFromFormat('Y-m-d', $request->input('year') . '-' . $request->input('month') . '-' . $day);
-                Carbon::setTestNow($nextDate);
+                $dateNow = Carbon::createFromFormat('Y-m-d', $year . '-' . $month . '-' . $day)->toDateString();
+//                Carbon::setTestNow($nextDate);
             }
             $usedData = collect([
-                'date' => Carbon::today()->toDateString(),
+                'date' => $dateNow,
                 'used' => collect([
                     'ws_outside' => $ws_outside['init'],
                     'water_filtration' => $water_filtration['init'],
@@ -68,49 +92,49 @@ class WaterUsageResultController extends Controller
             ]);
             //Ws Outside
             for ($i = 0; $i < $ws_outside['data']->count(); $i++) {
-                if ($ws_outside['data'][$i]['date'] == Carbon::today()->toDateString()) {
+                if ($ws_outside['data'][$i]['date'] == $dateNow) {
                     $usedData['used']['ws_outside'] = $ws_outside['data'][$i]['used'];
                 }
             }
             //Water Filtration
             for ($i = 0; $i < $water_filtration['data']->count(); $i++) {
-                if ($water_filtration['data'][$i]['date'] == Carbon::today()->toDateString()) {
+                if ($water_filtration['data'][$i]['date'] == $dateNow) {
                     $usedData['used']['water_filtration'] = $water_filtration['data'][$i]['used'];
                 }
             }
             //Condens
             for ($i = 0; $i < $condens['data']->count(); $i++) {
-                if ($condens['data'][$i]['date'] == Carbon::today()->toDateString()) {
+                if ($condens['data'][$i]['date'] == $dateNow) {
                     $usedData['used']['condens'] = $condens['data'][$i]['used'];
                 }
             }
             //Boiler
             for ($i = 0; $i < $boiler['data']->count(); $i++) {
-                if ($boiler['data'][$i]['date'] == Carbon::today()->toDateString()) {
+                if ($boiler['data'][$i]['date'] == $dateNow) {
                     $usedData['used']['boiler'] = $boiler['data'][$i]['used'];
                 }
             }
             //Tank 210
             for ($i = 0; $i < $tank_210['data']->count(); $i++) {
-                if ($tank_210['data'][$i]['date'] == Carbon::today()->toDateString()) {
+                if ($tank_210['data'][$i]['date'] == $dateNow) {
                     $usedData['used']['tank_210'] = $tank_210['data'][$i]['used'];
                 }
             }
             //Water Meter
             for ($i = 0; $i < $water_meter['data']->count(); $i++) {
-                if ($water_meter['data'][$i]['date'] == Carbon::today()->toDateString()) {
+                if ($water_meter['data'][$i]['date'] == $dateNow) {
                     $usedData['used']['water_meter'] = $water_meter['data'][$i]['used'];
                 }
             }
             //Ice Maker
             for ($i = 0; $i < $ice_maker['data']->count(); $i++) {
-                if ($ice_maker['data'][$i]['date'] == Carbon::today()->toDateString()) {
+                if ($ice_maker['data'][$i]['date'] == $dateNow) {
                     $usedData['used']['ice_maker'] = $ice_maker['data'][$i]['used'];
                 }
             }
             //Water Cooler
             for ($i = 0; $i < $water_cooler['data']->count(); $i++) {
-                if ($water_cooler['data'][$i]['date'] == Carbon::today()->toDateString()) {
+                if ($water_cooler['data'][$i]['date'] == $dateNow) {
                     $usedData['used']['water_cooler'] = $water_cooler['data'][$i]['used'];
                 }
             }
@@ -135,8 +159,7 @@ class WaterUsageResultController extends Controller
             'used'=>$avgUsed
         ]);
 
-        return response()->json($results);
-//        return response()->json($sumUsedResult);
+        return $results;
     }
 
     /*Sum Used*/
@@ -155,7 +178,7 @@ class WaterUsageResultController extends Controller
             $sumBoilerMain3M21 = $sumB1B2 + $sumMain3 + $used['ws_outside']['m_21_used'];
             $sumM1517181920 = $used['ws_outside']['m_15_used'] + $used['ws_outside']['m_17_used'] + $used['ws_outside']['m_18_used']
                 + $used['ws_outside']['m_19_used'] + $used['ws_outside']['m_20_used'];
-            $sumTotal = $sumCondens + $sumBoilerMain3M21 + $sumM1517181920;
+            $sumTotal = $sumMain3+$sumM1517181920+$used['ws_outside']['m_21_used']+$used['ws_outside']['m_pwa_used'];
             $date->put('sumUsed', [
                 'sumP1P2' => $sumP1P2,
                 'sumP1P2Minus210' => $sumP1P2Minus210,

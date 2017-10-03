@@ -10,6 +10,6 @@ class Car extends Model
     protected $fillable=['id','car_number','car_type_id','plate_number','status','quantity'];
 
     public function carType(){
-        return $this->belongsTo('App\Models\HumanResource\Car','car_type_id');
+        return $this->belongsTo('App\Models\HumanResource\CarType','car_type_id');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Eng;
 
+use App\Models\Eng\ChlorineLab;
 use App\Models\Eng\EngDateTime;
 use App\Models\Eng\WaterFiltration;
 use App\Models\Eng\WaterMeter;
@@ -17,11 +18,15 @@ class WaterFiltrationController extends Controller
         $plant1_mm_1_used=0;
         $plant2_mm_2_used=0;
         $dateInput = Carbon::createFromFormat('Y-m-d', $date);
-        Carbon::setTestNow($dateInput);
-        $yesterday = Carbon::yesterday()->toDateString();
+//        Carbon::setTestNow($dateInput);
+//        $yesterday = Carbon::yesterday()->toDateString();
+        $yesterday=$dateInput->subDay(1)->toDateString();
         $last_yesterday_used = WaterFiltration::whereDate('date', $yesterday)
             ->get()
             ->sortBy('time_record', SORT_NATURAL)->values()->last();
+        if ($last_yesterday_used != null) {
+            $last_yesterday_used->zero_time_record = '0:00';
+        }
         $records = WaterFiltration::whereDate('date', $date)
             ->get()->sortBy('time_record', SORT_NATURAL)->values();
         //Water Meter
@@ -50,12 +55,15 @@ class WaterFiltrationController extends Controller
                 }
             }
             //If Has Lab
-            if ($labs) {
+           if ($labs->count()>0) {
                 for ($k = 0; $k < $labs->count(); $k++) {
-                    if ($record->time_record == $labs[$k]->time_record)
-                        $record->lab_p1 = $labs[$k]->lab->p1;
-                    $record->lab_p2 = $labs[$k]->lab->p2;
-                    $labs->splice($k, 1);
+                    if($labs[$k]->lab!=null){
+                        if ($record->time_record == $labs[$k]->time_record){
+                            $record->lab_p1 = $labs[$k]->lab->p1;
+                            $record->lab_p2 = $labs[$k]->lab->p2;
+                        }
+//                        $labs->splice($k, 1);
+                    }
                 }
             }
             $i++;
@@ -69,7 +77,12 @@ class WaterFiltrationController extends Controller
         $results=collect([
            'data'=>$records,
             'plant1_mm_1_used'=>$plant1_mm_1_used,
-            'plant2_mm_2_used'=>$plant2_mm_2_used
+            'plant2_mm_2_used'=>$plant2_mm_2_used,
+            'labs'=>$labs,
+            'yesterday'=>$yesterday,
+            'yesterday_meter'=>$last_yesterday_used,
+            'date'=>$date
+//            'dateTime'=>$dateTime
         ]);
         return response()->json($results);
     }
@@ -128,9 +141,11 @@ class WaterFiltrationController extends Controller
         $p2_mm2_used = 0;
         //Last Month
         $dateInput = Carbon::createFromFormat('Y-m-d', $year . '-' . $month . '-1');
-        Carbon::setTestNow($dateInput);
-        $last_month = Carbon::yesterday()->month;
-        $last_year = Carbon::yesterday()->year;
+//        Carbon::setTestNow($dateInput);
+//        $last_month = Carbon::yesterday()->month;
+//        $last_year = Carbon::yesterday()->year;
+        $last_month=$dateInput->subDay(1)->month;
+        $last_year=$dateInput->subDay(1)->year;
         $last_month_records = WaterFiltration::whereYear('date', $last_year)
             ->whereMonth('date', $last_month)
             ->get()->sortBy('date', SORT_NATURAL)->values()->groupBy('date');

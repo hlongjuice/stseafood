@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class DefrostTime extends Model
 {
     protected $table="eng_defrost_time";
-    protected $fillable=['time_record'];
+    protected $fillable=['time_record','storage_id'];
 }

@@ -22,13 +22,13 @@ class RepairInvoiceController extends Controller
     }
 
     //get Record By Date
-    public function getRecordByDate($date)
+    public function getRecordByDate(Request $request)
     {
-        $records = RepairInvoice::whereDate('date', $date)
+        $records = RepairInvoice::whereDate('date', $request->input('date'))
             ->where('status_id',$this->_statusApprove)
             ->orderBy('time', 'desc')
             ->get();
-//        return view();
+        return view('site.other.repair_invoice.index')->with('records', $records);
     }
 
     //get Excel
@@ -37,8 +37,9 @@ class RepairInvoiceController extends Controller
         $invoice = RepairInvoice::with('approver','sender','division')->where('id', $id)
            ->first();
 //        dd($invoice);
-        Excel::create('test_excel', function ($excel) use ($invoice) {
+        Excel::create('report', function ($excel) use ($invoice) {
             $excel->sheet('sheet_1', function ($sheet) use ($invoice) {
+                $sheet->setAllBorders('thin');
                 $sheet->setStyle(array(
                     'font' => array(
                         'name' => 'Calibri',
@@ -81,13 +82,19 @@ class RepairInvoiceController extends Controller
                 $sheet->mergeCells('B5:D5');
                 $sheet->cell('B5', $invoice->receiver->name);
                 //Item
+                $sheet->mergeCells('A6:D6');
                 $sheet->cell('A6', 'เครื่องจักร');
                 $sheet->mergeCells('A7:D7');
                 $sheet->cell('A7', $invoice->item);
                 //Item Details
-                $sheet->cell('A8', 'ลายละเอียดการชำรุด');
+                $sheet->mergeCells('A8:D8');
+                $sheet->cell('A8', 'รายละเอียดการชำรุด');
                 $sheet->mergeCells('A9:D12');
                 $sheet->cell('A9', $invoice->item_details);
+                $sheet->getStyle('A9')
+                    ->getAlignment()
+                    ->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER)
+                    ->setVertical(\PHPExcel_Style_Alignment::VERTICAL_CENTER);
                 //Sender
                 $sheet->cell('A13', 'ผู้ส่งซ่อม');
                 $sheet->mergeCells('B13:D13');

@@ -20,11 +20,15 @@ class CondensController extends Controller
         $con8_w_meter_used = 0;
         //Date
         $dateInput = Carbon::createFromFormat('Y-m-d', $date);
-        Carbon::setTestNow($dateInput);
-        $yesterday = Carbon::yesterday()->toDateString();
+//        Carbon::setTestNow($dateInput);
+//        $yesterday = Carbon::yesterday()->toDateString();
+        $yesterday=$dateInput->subDay(1)->toDateString();
         $last_yesterday_used = Condens::whereDate('date', $yesterday)
             ->get()
             ->sortBy('time_record', SORT_NATURAL)->values()->last();
+        if ($last_yesterday_used != null) {
+            $last_yesterday_used->zero_time_record = '0:00';
+        }
         $records = Condens::whereDate('date', $date)
             ->get()->sortBy('time_record', SORT_NATURAL)->values();
         if ($records->count() > 0 && $last_yesterday_used != null) {
@@ -43,7 +47,10 @@ class CondensController extends Controller
             'con5_meter_m5_used' => $con5_meter_m5_used,
             'con6_meter_m6_used' => $con6_meter_m6_used,
             'con7_meter_m7_used' => $con7_meter_m7_used,
-            'con8_w_meter_used' => $con8_w_meter_used
+            'con8_w_meter_used' => $con8_w_meter_used,
+            'yesterday'=>$yesterday,
+            'yesterday_meter'=>$last_yesterday_used,
+            'date'=>$date
         ]);
         return response()->json($results);
     }
@@ -101,9 +108,11 @@ class CondensController extends Controller
         $con8_w_meter_used = 0;
         //Last Month
         $dateInput = Carbon::createFromFormat('Y-m-d', $year . '-' . $month . '-1');
-        Carbon::setTestNow($dateInput);
-        $last_month = Carbon::yesterday()->month;
-        $last_year = Carbon::yesterday()->year;
+//        Carbon::setTestNow($dateInput);
+//        $last_month = Carbon::yesterday()->month;
+//        $last_year = Carbon::yesterday()->year;
+        $last_month=$dateInput->subDay(1)->month;
+        $last_year=$dateInput->subDay(1)->year;
         $last_month_records = Condens::whereYear('date', $last_year)
             ->whereMonth('date', $last_month)
             ->get()->sortBy('date', SORT_NATURAL)->values()->groupBy('date');
