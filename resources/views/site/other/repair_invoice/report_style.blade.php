@@ -1,12 +1,5 @@
 <style>
-    @page {
-        size: A4 landscape;
-        margin: 0;
-    }
-    html, body {
-        /*width: 210mm !important;*/
-        height: 297mm !important;
-    }
+
     @font-face {
         font-family: 'TH Sarabun New';
         src: {{asset('fonts/thsarabun/THSarabunNew.eot')}} !important;

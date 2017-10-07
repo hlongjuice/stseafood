@@ -2,12 +2,13 @@
 namespace App\Http\Controllers\Web\Other;
 
 use App\Models\RepairInvoice;
-use PDF;
+//use PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\View;
 use Maatwebsite\Excel\Facades\Excel;
+use niklasravnsborg\LaravelPdf\Facades\Pdf;
 
 class RepairInvoiceController extends Controller
 {
@@ -200,16 +201,17 @@ class RepairInvoiceController extends Controller
         })->export('pdf');*/
 //        return view('site.other.repair_invoice.report2')->with('invoice',$invoice);
         $data=[
-          'invoice'=>$invoice
+            'invoice'=>$invoice
         ];
-//        $html = View::make('site.other.repair_invoice.report',$data)->render();
-//        $pdf=PDF::loadHtml($html)->setPaper('A4','landscape');
-//        dd(PDF::setOptions(['defaultFont'=>'helvetica']));
-
-        $pdf = PDF::loadView('site.other.repair_invoice.report2',$data)
-            ->setPaper('a4', 'landscape')->setOptions(['defaultFont'=>'helvetica']);
+        $pdf=Pdf::loadView('site.other.repair_invoice.report',$data);
+        $pdf->mpdf->setDisplayMode('real');
 //        dd($pdf);
-        return $pdf->download('invoice.pdf');
-//        return $pdf->render();
+        $pdf->mpdf->title="Yo!!";
+        $pdf->mpdf->SetWatermarkText('DRAFT');
+        $pdf->mpdf->showWatermarkText = true;
+//        dd($pdf->mpdf);
+//        $pdf->mpdf->ZoomMode=20;
+//        return $pdf->Output('filename.pdf','I');
+        return $pdf->stream('document.pdf');
     }
 }

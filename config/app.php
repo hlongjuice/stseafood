@@ -169,8 +169,8 @@ return [
         Barryvdh\Cors\ServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
-//        niklasravnsborg\LaravelPdf\PdfServiceProvider::class,
-        Barryvdh\DomPDF\ServiceProvider::class,
+        niklasravnsborg\LaravelPdf\PdfServiceProvider::class,
+//        Barryvdh\DomPDF\ServiceProvider::class,
 
 
         /*
@@ -237,7 +237,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-//        'PDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class
-        'PDF' => Barryvdh\DomPDF\Facade::class,
+        'PDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class
+//        'PDF' => Barryvdh\DomPDF\Facade::class,
     ],
 ];
