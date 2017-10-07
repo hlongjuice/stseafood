@@ -155,7 +155,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('get_record_by_date','Web\Other\RepairInvoiceController@getRecordByDate')
                 ->name('other.repair_invoice.getRecordByDate');
             //Get Excel
-            Route::get('get_excel/{id}', 'Web\Other\RepairInvoiceController@getInvoiceExcel')
+            Route::get('get_excel/{id}', 'Web\Other\RepairInvoiceController@getExcel')
                 ->name('other.repair_invoice.getInvoiceExcel');
         });
     });

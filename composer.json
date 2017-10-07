@@ -15,7 +15,8 @@
         "laravel/tinker": "~1.0",
         "league/oauth2-server": "5.1.3",
         "maatwebsite/excel": "~2.1.0",
-        "mpdf/mpdf": "*"
+        "mpdf/mpdf": "*",
+        "niklasravnsborg/laravel-pdf": "^1.5"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

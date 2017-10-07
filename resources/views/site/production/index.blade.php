@@ -22,7 +22,8 @@
                 </div>
                 <div class="col-xs-12">
                     <div class="table-responsive">
-                        <table id="record-table" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                        <table id="record-table" class="table table-striped table-bordered" cellspacing="0"
+                               width="100%">
                             <thead>
                             <tr>
                                 <td>เวลา</td>
@@ -34,19 +35,21 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($result->productionDateTime as $time)
-                                @foreach($time->productionWork as $work)
-                                    <tr>
-                                        <td>{{$time->time_start}}-{{$work->p_time_end}}</td>
-                                        <td> {{$work->productionActivity->name}}</td>
-                                        <td>{{$work->productionShrimpType->name}}</td>
-                                        <td>{{$work->productionShrimpSize->name}}</td>
-                                        <td>{{$work->p_group_id}}</td>
-                                        <td><a href="{{route('production.work.getExcel',$work->id)}}"
-                                               class="btn btn-primary">ดาวโหลด</a></td>
-                                    </tr>
+                            @if($result!=null)
+                                @foreach($result->productionDateTime as $time)
+                                    @foreach($time->productionWork as $work)
+                                        <tr>
+                                            <td>{{$time->time_start}}-{{$work->p_time_end}}</td>
+                                            <td> {{$work->productionActivity->name}}</td>
+                                            <td>{{$work->productionShrimpType->name}}</td>
+                                            <td>{{$work->productionShrimpSize->name}}</td>
+                                            <td>{{$work->p_group_id}}</td>
+                                            <td><a href="{{route('production.work.getExcel',$work->id)}}"
+                                                   class="btn btn-primary">ดาวโหลด</a></td>
+                                        </tr>
+                                    @endforeach
                                 @endforeach
-                            @endforeach
+                            @endif
                             </tbody>
                         </table>
                     </div>

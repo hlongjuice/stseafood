@@ -112,6 +112,13 @@ class WorkController extends Controller
         Excel::create('report', function ($excel) use ($results,$work) {
             //Table Header
             $excel->sheet('sheet_1', function ($sheet) use ($results,$work) {
+                $sheet->setStyle(array(
+                    'font' => array(
+                        'size' => 15,
+//                        'margin-left'=>2
+//                        'bold' => true
+                    )
+                ));
                 $sheet->setOrientation('landscape');
                 $sheet->setPageMargin(array(
                     0.25, 0.30, 0.25, 0.30
