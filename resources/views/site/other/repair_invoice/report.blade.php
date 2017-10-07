@@ -1,5 +1,5 @@
 {{--<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office"--}}
-      {{--xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">--}}
+{{--xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">--}}
 <html>
 <head>
     {{--<meta http-equiv="Content-Type" content="text/html; charset=windows-874">--}}
@@ -21,6 +21,7 @@
             mso-footer-margin: .3in;
             mso-page-orientation: landscape;
         }
+
         -->
     </style>
     @extends('site.other.repair_invoice.report_style')
@@ -29,7 +30,6 @@
 <body link="blue" vlink="purple">
 
 {{--<a href="javascript:if(window.print)window.print()">Print</a>--}}
-<div style="font-family:'TH Baijam'">หกหก</div>
 <table border="0" cellpadding="0" cellspacing="0" width="1116" style="border-collapse:
  collapse;table-layout:fixed;width:840pt">
     <colgroup>
@@ -39,25 +39,22 @@
     </colgroup>
     <tbody>
     <tr height="19" style="height:14.25pt">
-        <td colspan="12" rowspan="2" height="38" class="xl79" width="1116" style="height:28.5pt;
+        <td colspan="12" rowspan="2" height="38" class="xl79" width="1116" style="padding-top:10px; padding-bottom: 10px; font-size:25px; font-weight: bold; height:28.5pt;
   width:840pt">บริษัท สุราษฎร์ซีฟู๊ดส์ จำกัด
         </td>
     </tr>
     <tr height="19" style="height:14.25pt">
     </tr>
     <tr height="19" style="height:14.25pt">
-        <td colspan="12" rowspan="2" height="38" class="xl80" style="height:28.5pt">ใบแจ้งซ่อม</td>
+        <td colspan="12" rowspan="2" height="38" class="xl80" style="padding-top:10px; padding-bottom: 10px; font-size: 22px; font-weight: bold; height:28.5pt">ใบแจ้งซ่อม</td>
     </tr>
     <tr height="19" style="height:14.25pt">
     </tr>
 
     <!-- Left Column -->
     <tr height="40" style="mso-height-source:userset;height:30.0pt">
-        <td height="40" class="xl65" style="height:30.0pt;border-top:none">วันที่</td>
-        <!-- Date -->
-        <td class="xl66" style="border-top:none">{{$invoice->date}}</td>
-        <td class="xl66" style="border-top:none">เวลาส่ง</td>
-        <td class="xl67" style="border-top:none">{{$invoice->time}}</td>
+        <td colspan=2 height="40" class="xl65" style="height:30.0pt;border-top:none">วันที่ : {{$invoice->date}}</td>
+        <td colspan=2 class="xl66" style="border-top:none">เวลาส่ง : {{$invoice->time}}</td>
         <td colspan="3" class="xl65" style="border-left:none">เลขรับที่
             ................................
         </td>
@@ -73,7 +70,7 @@
         </td>
         <td colspan="2" class="xl69">เวลารับ ..................................</td>
         <td colspan="4" class="xl82" style="border-left:none">1)
-            ……………………………………………………………………………………...........
+            ...........................................................
         </td>
     </tr>
     <tr height="40" style="mso-height-source:userset;height:30.0pt">
@@ -85,8 +82,8 @@
             ...................................
         </td>
         <td colspan="2" class="xl69">ผู้สั่งงาน .................................</td>
-        <td colspan="4" class="xl82" style="border-left:none">2)<span style="mso-spacerun:yes">&nbsp;
-  </span>……………………………………………………………………………………...........
+        <td colspan="4" class="xl82" style="border-left:none">2)
+            ...........................................................
         </td>
     </tr>
     <tr height="40" style="mso-height-source:userset;height:30.0pt">
@@ -97,32 +94,36 @@
         </td>
         <td class="xl72">&nbsp;</td>
         <td class="xl73">&nbsp;</td>
-        <td colspan="4" class="xl82" style="border-left:none">3)<span style="mso-spacerun:yes">&nbsp;
-  </span>……………………………………………………………………………………...........
+        <td colspan="4" class="xl82" style="border-left:none">3)
+            ...........................................................
         </td>
     </tr>
     <tr height="40" style="mso-height-source:userset;height:30.0pt">
         <td colspan="4" height="40" class="xl82" style="height:30.0pt">รายละเอียดการชำรุด</td>
         <td colspan="4" class="xl81" style="border-left:none">รายการซ่อม
-            …………………………………………………………….............
+            <span> ....................................................</span>
         </td>
-        <td colspan="4" class="xl82" style="border-left:none">4)<span style="mso-spacerun:yes">&nbsp;
-  </span>……………………………………………………………………………………...........
+        <td colspan="4" class="xl82" style="border-left:none">4)
+            ...........................................................
         </td>
     </tr>
     <tr height="40" style="mso-height-source:userset;height:30.0pt">
         <td colspan="4" height="40" class="xl83"
             style="height:30.0pt;padding-left:10px;">{{$invoice->item_details}}</td>
-        <td colspan="4" class="xl84" style="border-left:none">………………………………………………………………………………...........</td>
-        <td colspan="4" class="xl82" style="border-left:none">5)<span style="mso-spacerun:yes">&nbsp;
-  </span>……………………………………………………………………………………...........
+        <td colspan="4" class="xl84" style="border-left:none">
+            ................................................................
+        </td>
+        <td colspan="4" class="xl82" style="border-left:none">5)
+            ...........................................................
         </td>
     </tr>
     <tr height="40" style="mso-height-source:userset;height:30.0pt">
         <td colspan="4" height="40" class="xl83" style="height:30.0pt">&nbsp;</td>
-        <td colspan="4" class="xl84" style="border-left:none">………………………………………………………………………………...........</td>
-        <td colspan="4" class="xl82" style="border-left:none">6)<span style="mso-spacerun:yes">&nbsp;
-  </span>……………………………………………………………………………………...........
+        <td colspan="4" class="xl84" style="border-left:none">
+            ................................................................
+        </td>
+        <td colspan="4" class="xl82" style="border-left:none">6)
+            ...........................................................
         </td>
     </tr>
     <tr height="40" style="mso-height-source:userset;height:30.0pt">
@@ -131,7 +132,9 @@
         <td class="xl70"></td>
         <td class="xl70"></td>
         <td class="xl69">&nbsp;</td>
-        <td colspan="4" class="xl84" style="border-left:none">………………………………………………………………………………...........</td>
+        <td colspan="4" class="xl84" style="border-left:none">
+            ................................................................
+        </td>
         <td class="xl68" style="border-left:none">&nbsp;</td>
         <td class="xl70"></td>
         <td colspan="2" class="xl69">มีต่อด้านหลัง<span style="mso-spacerun:yes">&nbsp;
@@ -143,7 +146,9 @@
         <td class="xl70"></td>
         <td class="xl70"></td>
         <td class="xl69">&nbsp;</td>
-        <td colspan="4" class="xl84" style="border-left:none">………………………………………………………………………………...........</td>
+        <td colspan="4" class="xl84" style="border-left:none">
+            ................................................................
+        </td>
         <td colspan="4" class="xl82" style="border-left:none">[<span style="mso-spacerun:yes">&nbsp;&nbsp; </span>]<span
                     style="mso-spacerun:yes">&nbsp; </span>ทำความสะอาดหลังการซ่อม
         </td>
@@ -154,7 +159,9 @@
         <td class="xl72">&nbsp;</td>
         <td class="xl72">&nbsp;</td>
         <td class="xl73">&nbsp;</td>
-        <td colspan="4" class="xl84" style="border-left:none">………………………………………………………………………………...........</td>
+        <td colspan="4" class="xl84" style="border-left:none">
+            ................................................................
+        </td>
         <td colspan="2" class="xl68" style="border-left:none">ซ่อมเสร็จวันที่
             .........................
         </td>
@@ -162,7 +169,9 @@
     </tr>
     <tr height="40" style="mso-height-source:userset;height:30.0pt">
         <td colspan="4" height="40" class="xl81" style="height:30.0pt">ประเมิณการซ่อม</td>
-        <td colspan="4" class="xl84" style="border-left:none">………………………………………………………………………………...........</td>
+        <td colspan="4" class="xl84" style="border-left:none">
+            ................................................................
+        </td>
         <td colspan="2" class="xl71" style="border-left:none">ผู้ซ่อม
             .......................................
         </td>
@@ -180,7 +189,9 @@
                     style="mso-spacerun:yes">&nbsp; </span>พอใช้
         </td>
         <td class="xl69">&nbsp;</td>
-        <td colspan="4" class="xl84" style="border-left:none">………………………………………………………………………………...........</td>
+        <td colspan="4" class="xl84" style="border-left:none">
+            ................................................................
+        </td>
         <td colspan="2" class="xl65" style="border-left:none">[<span style="mso-spacerun:yes">&nbsp;&nbsp; </span>]<span
                     style="mso-spacerun:yes">&nbsp; </span>ไม่ต้องลงประวัติ
         </td>
@@ -190,9 +201,11 @@
     <tr height="40" style="mso-height-source:userset;height:30.0pt">
         <td colspan="4" height="40" class="xl87" style="border-right:.5pt solid black;
   height:30.0pt">[<span style="mso-spacerun:yes">&nbsp;&nbsp; </span>]<span style="mso-spacerun:yes">&nbsp; </span>ปรับปรุง
-            ……………………………………………………………………………
+            <span>.......................................................................</span>
         </td>
-        <td colspan="4" class="xl84" style="border-left:none">………………………………………………………………………………...........</td>
+        <td colspan="4" class="xl84" style="border-left:none">
+            ................................................................
+        </td>
         <td colspan="2" class="xl68" style="border-left:none">[<span style="mso-spacerun:yes">&nbsp;&nbsp; </span>]<span
                     style="mso-spacerun:yes">&nbsp; </span>ลงประวัติ
         </td>
@@ -201,20 +214,25 @@
     </tr>
     <tr height="40" style="mso-height-source:userset;height:30.0pt">
         <td colspan="4" height="40" class="xl68" style="border-right:.5pt solid black;
-  height:30.0pt">……………………………………………………………………………………...................
+  height:30.0pt">
+            .....................................................................
         </td>
-        <td colspan="4" class="xl84" style="border-left:none">………………………………………………………………………………...........</td>
+        <td colspan="4" class="xl84" style="border-left:none">
+            ................................................................
+        </td>
         <td colspan="2" class="xl68" style="border-left:none">ผู้ตรวจสอบ
             ...........................
         </td>
-        <td colspan="2" class="xl69">วันที่ .............................</td>
+        <td colspan="2" class="xl69">วันที่ ................................</td>
     </tr>
     <tr height="40" style="mso-height-source:userset;height:30.0pt">
         <td colspan="2" height="40" class="xl68" style="height:30.0pt">ผู้สั่งซ่อม
             ..................................
         </td>
         <td colspan="2" class="xl69">วันที่ .......................................</td>
-        <td colspan="4" class="xl84" style="border-left:none">………………………………………………………………………………...........</td>
+        <td colspan="4" class="xl84" style="border-left:none">
+            ................................................................
+        </td>
         <td class="xl68" style="border-left:none">ผจก.รับทราบ</td>
         <td colspan="2" class="xl85">.................................</td>
         <td class="xl75">&nbsp;</td>

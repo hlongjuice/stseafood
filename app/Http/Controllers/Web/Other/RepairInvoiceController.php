@@ -190,28 +190,15 @@ class RepairInvoiceController extends Controller
     public function getExcel($id){
         $invoice = RepairInvoice::with('approver', 'sender', 'division')->where('id', $id)
             ->first();
-      /*  Excel::create('New file', function($excel) use ($invoice) {
-
-            $excel->sheet('New sheet', function($sheet) use ($invoice) {
-                $sheet->setOrientation('landscape');
-                $sheet->loadView('site.other.repair_invoice.report')->with('invoice',$invoice);
-
-            });
-
-        })->export('pdf');*/
-//        return view('site.other.repair_invoice.report2')->with('invoice',$invoice);
         $data=[
             'invoice'=>$invoice
         ];
         $pdf=Pdf::loadView('site.other.repair_invoice.report',$data);
-        $pdf->mpdf->setDisplayMode('real');
-//        dd($pdf);
+//        $pdf->mpdf->setDisplayMode('real');
         $pdf->mpdf->title="Yo!!";
-        $pdf->mpdf->SetWatermarkText('DRAFT');
-        $pdf->mpdf->showWatermarkText = true;
 //        dd($pdf->mpdf);
 //        $pdf->mpdf->ZoomMode=20;
 //        return $pdf->Output('filename.pdf','I');
-        return $pdf->stream('document.pdf');
+        return $pdf->stream();
     }
 }

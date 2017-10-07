@@ -90,7 +90,7 @@
         mso-font-charset:0;
         text-align:left;
         border-top:.5pt solid black;
-        border-right:none;
+        border-right:.5pt solid black;;
         border-bottom:none;
         border-left:none;
         padding-left:12px;
