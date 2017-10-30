@@ -269,4 +269,11 @@ class ExpirationController extends Controller
         }
         return response()->json($result);
     }
+
+    //PD QC Checker
+    public function expChecker(Request $request){
+       $result=DB::transaction(function() use ($request){
+
+        });
+    }
 }

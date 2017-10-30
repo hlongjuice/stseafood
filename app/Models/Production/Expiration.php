@@ -8,7 +8,7 @@ class Expiration extends Model
 {
     protected $table='production_exp';
     protected $fillable=[
-        'product_id','mfd','code','exp_date','date_format'
+        'product_id','mfd','code','exp_date','date_format','pd_checker','qc_checker'
     ];
 
     public function build(){
