@@ -126,6 +126,9 @@ Route::group(['middleware' => 'auth:api'], function () {
            Route::get('delete_exp/{id}','Api\Production\ExpirationController@deleteExp');
            Route::get('delete_exp_build/{id}','Api\Production\ExpirationController@deleteExpBuild');
            Route::post('delete_exp_image','Api\Production\ExpirationController@deleteExpImage');
+
+           //Checker
+           Route::post('checker','Api\Production\ExpirationController@expChecker');
        });
         //Product
         Route::prefix('product')->group(function(){

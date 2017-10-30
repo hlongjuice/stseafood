@@ -46,8 +46,15 @@
                                     <td>{{$record->time}}</td>
                                     <td>{{$record->item}}</td>
                                     <td>{{$record->sender->name}} {{$record->sender->lastname}}</td>
-                                    <td><a href="{{route('other.repair_invoice.getInvoiceExcel',$record->id)}}"
-                                           class="btn btn-primary">ดาวโหลด</a></td>
+                                    {{--<td> ระบุหมายเลขใบแจ้งซ่อม : <input type="text" id="invoice_number"> <a id="btn-download"--}}
+                                           {{--class="btn btn-primary not-active">ดาวโหลด</a></td>--}}
+                                    <td> ระบุหมายเลขใบแจ้งซ่อม :
+                                        <form method="POST" action="{{route('other.repair_invoice.getInvoiceExcel',$record->id)}}">
+                                            {{ csrf_field() }}
+                                            <input type="text" id="invoice_number" name="invoice_number">
+                                            <button class="btn btn-primary" type="submit">ดาวโหลด</button>
+                                        </form>
+                                    </td>
                                 </tr>
                             @endforeach
                             </tbody>
@@ -57,6 +64,11 @@
             </div>
         </div>
     </div>
+    <style>
+        .not-active {
+           /*display: none;*/
+        }
+    </style>
 
 @endsection
 

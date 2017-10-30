@@ -187,18 +187,15 @@ class RepairInvoiceController extends Controller
         })->export('xls');
     }
 
-    public function getExcel($id){
+    public function getExcel($id,Request $request){
         $invoice = RepairInvoice::with('approver', 'sender', 'division')->where('id', $id)
             ->first();
         $data=[
-            'invoice'=>$invoice
+            'invoice'=>$invoice,
+            'number'=>$request->input('invoice_number')
         ];
         $pdf=Pdf::loadView('site.other.repair_invoice.report',$data);
-//        $pdf->mpdf->setDisplayMode('real');
-        $pdf->mpdf->title="Yo!!";
-//        dd($pdf->mpdf);
-//        $pdf->mpdf->ZoomMode=20;
-//        return $pdf->Output('filename.pdf','I');
+        $pdf->mpdf->title="ใบแจ้งซ่อม";
         return $pdf->stream();
     }
 }

@@ -266,6 +266,20 @@
         <td width="93" style="width:70pt"></td>
         <td width="93" style="width:70pt"></td>
     </tr>
+    <tr>
+        <td width="93" style="width:70pt"></td>
+        <td width="93" style="width:70pt"></td>
+        <td width="93" style="width:70pt"></td>
+        <td width="93" style="width:70pt"></td>
+        <td width="93" style="width:70pt"></td>
+        <td width="93" style="width:70pt"></td>
+        <td width="93" style="width:70pt"></td>
+        <td width="93" style="width:70pt"></td>
+        <td width="93" style="width:70pt"></td>
+        <td width="93" style="width:70pt"></td>
+        <td width="93" style="width:70pt"></td>
+        <td width="93" style="width:70pt;padding-top:5px;">{{$number}}</td>
+    </tr>
     <!--[endif]-->
     </tbody>
 </table>

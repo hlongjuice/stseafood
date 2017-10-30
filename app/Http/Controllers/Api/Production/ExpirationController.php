@@ -273,7 +273,11 @@ class ExpirationController extends Controller
     //PD QC Checker
     public function expChecker(Request $request){
        $result=DB::transaction(function() use ($request){
-
+            $exp_record=Expiration::where('id',$request->input('id'))->update([
+               'pd_checker'=>$request->input('pd_checker'),
+               'qc_checker'=>$request->input('qc_checker')
+            ]);
         });
+       return response()->json($result);
     }
 }
