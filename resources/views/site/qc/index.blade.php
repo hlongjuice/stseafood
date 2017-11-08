@@ -42,7 +42,7 @@
                                 <tr>
                                     <td>{{$record->supplier->name}}</td>
                                     <td><a href="{{route('qc.export.getExcel',$record->id)}}"
-                                           class="btn btn-primary">ดาวโหลด</a></td>
+                                           class="btn btn-primary">ดาวน์โหลด</a></td>
                                 </tr>
                             @endforeach
                             </tbody>

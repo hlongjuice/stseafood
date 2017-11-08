@@ -56,7 +56,9 @@ class ShrimpReceivingController extends Controller
                 'df_shrimp_scar' => $request->input('df_shrimp_scar'),
                 'df_shrimp_bk_line' => $request->input('df_shrimp_bk_line'),
                 'df_shrimp_disabled' => $request->input('df_shrimp_disabled'),
-                'car_release' => $request->input('car_release'),
+//                'car_release' => $request->input('car_release'),
+                'car_release_start'=>$request->input('car_release_start'),
+                'car_release_end'=>$request->input('car_release_end'),
                 'car_waiting_time' => $request->input('car_waiting_time'),
                 'real_shrimp_dead' => $request->input('real_shrimp_dead'),
                 'weight' => $request->input('weight')
@@ -137,7 +139,9 @@ class ShrimpReceivingController extends Controller
                 'df_shrimp_scar' => $request->input('df_shrimp_scar'),
                 'df_shrimp_bk_line' => $request->input('df_shrimp_bk_line'),
                 'df_shrimp_disabled' => $request->input('df_shrimp_disabled'),
-                'car_release' => $request->input('car_release'),
+//                'car_release' => $request->input('car_release'),
+                'car_release_start'=>$request->input('car_release_start'),
+                'car_release_end'=>$request->input('car_release_end'),
                 'car_waiting_time' => $request->input('car_waiting_time'),
                 'real_shrimp_dead' => $request->input('real_shrimp_dead'),
                 'weight' => $request->input('weight')
@@ -195,6 +199,20 @@ class ShrimpReceivingController extends Controller
                 $shrimp_receiving->waterTemp()->delete();
                 $shrimp_receiving->delete();
             }
+        });
+        return response()->json($result);
+    }
+
+    //Add Checker
+    public function addChecker(Request $request){
+        $result = DB::transaction(function () use ($request) {
+            QcSupplierReceiving::where('id', $request->input('receiving_id'))
+                ->update([
+                    'recorder'=>$request->input('recorder'),
+                    'checker'=>$request->input('checker'),
+                    'approver'=>$request->input('approver'),
+                    'report_number'=>$request->input('report_number')
+                ]);
         });
         return response()->json($result);
     }

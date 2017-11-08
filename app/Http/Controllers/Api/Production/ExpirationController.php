@@ -41,7 +41,7 @@ class ExpirationController extends Controller
         foreach ($records as $product_name => $values) {
             foreach ($values as $record) {
                 $round_group = $record['build']->sortBy('round')->groupBy('round');
-                $exp_date = Carbon::createFromFormat('Y-m-d', $record->mfd)->addMonth($record->exp_date)->toDateString();
+                $exp_date = Carbon::createFromFormat('Y-m-d', $record->mfd)->addMonthsNoOverflow($record->exp_date)->toDateString();
                 $rounds = collect([]);
                 foreach ($round_group as $key => $group) {
                     $sumOutside = $group->sum('q_outside');

@@ -305,6 +305,8 @@ Route::group(['middleware' => 'auth:api'], function () {
             Route::post('supplier/quarter', 'Api\QC\RecorderResultController@getSupplierResultByQuarter');
 
         });
+        //Add Checker
+        Route::post('add_checker','Api\QC\ShrimpReceivingController@addChecker');
         //Add Receiving
         Route::post('add_receiving', 'Api\QC\ShrimpReceivingController@addReceiving');
         //Add Extra Receiving
