@@ -76,7 +76,10 @@ class ShrimpReceivingController extends Controller
             QcSupplierReceiving::where('id', $request->input('receiving_id'))
                 ->update([
                     'last_five_round_status' => $request->input('last_five_round_status'),
-                    'real_shrimp_soft' => $request->input('real_shrimp_soft')
+                    'real_shrimp_soft' => $request->input('real_shrimp_soft'),
+                    'small_shrimp_b'=>$request->input('small_shrimp_b'),
+                    'avl'=>$request->input('avl'),
+                    'waiting_list'=>$request->input('waiting_list')
                 ]);
         });
         return response()->json($result);

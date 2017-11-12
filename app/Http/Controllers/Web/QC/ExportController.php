@@ -74,16 +74,33 @@ class ExportController extends Controller
         //Supplier
         $sheet->mergeCells('D4:F4');
         $sheet->cell('D4', 'แหล่งที่มาของวัตถุดิบ');
-        $sheet->mergeCells('G4:R4');
+        $sheet->mergeCells('G4:N4');
         $sheet->cell('G4', $result->supplier->name);
         //Pond
-        $sheet->cell('S4', 'บ่อ');
-        $sheet->cell('T4', $result->pond);
+        $sheet->cell('O4', 'บ่อ');
+        $sheet->cell('P4', $result->pond);
         //Code
+        $sheet->mergeCells('Q4:R4');
+        $sheet->cell('Q4', 'รหัสวัตถุดิบ');
+        $sheet->mergeCells('S4:T4');
+        $sheet->cell('S4', $result->code);
+        //AVL
         $sheet->mergeCells('U4:V4');
-        $sheet->cell('U4', 'รหัสวัตถุดิบ');
+        if($result->avl==1){
+            $sheet->cell('U4','✔   AVL');
+        }else{
+            $sheet->cell('U4','AVL');
+        }
+
+        //Waiting List
         $sheet->mergeCells('W4:X4');
-        $sheet->cell('W4', $result->code);
+        if($result->waiting_list==1){
+            $sheet->cell('W4','✔   Waiting List');
+        }else{
+            $sheet->cell('W4','Waiting List');
+
+        }
+
         //Details Header
         $sheet->setMergeColumn(array(
             'columns' => array('A'),
@@ -183,7 +200,8 @@ class ExportController extends Controller
         $sheet->setWidth(array(
 //                    'A'     =>  5,
             'B' => 30,
-            'S' =>20
+            'S' =>20,
+            'V'=>20
         ));
         return $sheet;
     }
@@ -302,7 +320,7 @@ class ExportController extends Controller
         $sheet->cell('P' . ($i + 1), 'กก.');
         $sheet->cell('Q' . ($i + 1), '%');
         $sheet->cell('P' . ($i + 2), number_format($result->last_five_shrimp_dead, 2));
-        $sheet->cell('Q' . ($i + 2), $result->last_five_shrimp_dead_p);
+        $sheet->cell('Q' . ($i + 2), number_format($result->last_five_shrimp_dead_p,2));
         $sheet->cells('M' . ($i + 1) . ':Q' . ($i + 2), function ($cells) {
             $cells->setBackground('#D9D9D9');
         });
@@ -312,9 +330,19 @@ class ExportController extends Controller
         $sheet->cell('T' . ($i + 1), 'กก.');
         $sheet->cell('U' . ($i + 1), '%');
         $sheet->cell('T' . ($i + 2), number_format($result->total_shrimp_dead, 2));
-        $sheet->cell('U' . ($i + 2), $result->total_shrimp_dead_p);
+        $sheet->cell('U' . ($i + 2), number_format($result->total_shrimp_dead_p,2));
         $sheet->cells('R' . ($i + 1) . ':U' . ($i + 2), function ($cells) {
             $cells->setBackground('#C4D79B');
+        });
+        //Small Shrimp B
+        $sheet->mergeCells('V' . ($i + 1) . ':V' . ($i + 2));
+        $sheet->cell('V' . ($i + 1), 'น้ำหนักกุ้งจิ๋วคืน B');
+        $sheet->cell('W' . ($i + 1), 'กก.');
+        $sheet->cell('X' . ($i + 1), '%');
+        $sheet->cell('W' . ($i + 2), number_format($result->small_shrimp_b, 2));
+        $sheet->cell('X' . ($i + 2), $result->small_shrimp_b_p);
+        $sheet->cells('V' . ($i + 1) . ':X' . ($i + 2), function ($cells) {
+            $cells->setBackground('#BFB1D1');
         });
 
 
@@ -328,7 +356,7 @@ class ExportController extends Controller
         $sheet->mergeCells('U' . ($i + 4) . ':X' . ($i + 4));
         $sheet->cell('U'.($i+4),$result->report_number);
 
-        $sheet->getStyle('B' . $i . ':V' . ($i + 2))
+        $sheet->getStyle('B' . $i . ':X' . ($i + 2))
             ->getAlignment()
             ->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER)
             ->setVertical(\PHPExcel_Style_Alignment::VERTICAL_CENTER);
@@ -392,7 +420,9 @@ class ExportController extends Controller
         $recorder->total_shrimp_dead = $recorder->shrimp_dead + $recorder->last_five_shrimp_dead;
         //Total Shrimp Dead Percent
         $recorder->total_shrimp_dead_p = $recorder->shrimp_dead_p + $recorder->last_five_shrimp_dead_p;
-//        dd($recorder);
+
+        $recorder->small_shrimp_b_p=$this->shrimpDeadToPercent($recorder->small_shrimp_b,$recorder->total_shrimp_weight);
+      // dd($recorder);
         return $recorder;
     }
 
