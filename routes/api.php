@@ -154,6 +154,8 @@ Route::group(['middleware' => 'auth:api'], function () {
                 ->name('human_resource.driver.getAllDriver');
         });
         /*Employee*/
+        //Search Employees
+        Route::post('employee/search','Api\HumanResource\EmployeeController@searchEmployee');
         /*Add New Employee*/
         Route::post('employee/add', 'Api\HumanResource\EmployeeController@addNewEmployee');
         /*Get All Employee*/
@@ -373,6 +375,17 @@ Route::group(['middleware' => 'auth:api'], function () {
             Route::post('update_record', 'Api\Eng\WaterMeterController@updateRecord');
             //Delete Record
             Route::get('delete_record/{id}', 'Api\Eng\WaterMeterController@deleteRecord');
+        });
+        //5x7 High Tank
+        Route::prefix('_5x7_high_tank')->group(function(){
+            //Get Records
+            Route::get('get_record_by_date/{date}', 'Api\Eng\_5X7HighTankController@getRecordByDate');
+            //Add Records
+            Route::post('add_record', 'Api\Eng\_5X7HighTankController@addRecord');
+            //Update Record
+            Route::post('update_record', 'Api\Eng\_5X7HighTankController@updateRecord');
+            //Delete Record
+            Route::get('delete_record/{id}', 'Api\Eng\_5X7HighTankController@deleteRecord');
         });
         //5x7
         Route::prefix('_5x7')->group(function () {

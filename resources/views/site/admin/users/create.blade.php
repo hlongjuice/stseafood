@@ -131,7 +131,7 @@
                                                 <div class="checkbox">
                                                     <label>
                                                         <input name="repair_approve" type="checkbox" value="1">
-                                                        อนุมติการส่งซ่อม
+                                                        อนุมัติการส่งซ่อม
                                                     </label>
                                                 </div>
                                             </div>

@@ -22,9 +22,17 @@ Route::get('test/eng','Web\Engineer\TestExportController@index')->middleware('au
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/','Web\DashboardController@index');
     Route::prefix('hr')->group(function () {
+        //Import Employee
         Route::get('import_employee', 'WebService\HR\EmployeeController@importEmployee')
             ->name('hr.employee.import');
+        //Import Departments
+        Route::get('import_department','WebService\HR\EmployeeController@importDepartments')
+            ->name('hr.employee.importDepartment');
+        //Import Ranks
+        Route::get('import_ranks','WebService\HR\EmployeeController@importRanks')
+            ->name('hr.employee.importRanks');
     });
+
     //Dashboard
     Route::get('dashboard','Web\DashboardController@index')
         ->name('dashboard');
@@ -51,7 +59,7 @@ Route::group(['middleware' => 'auth'], function () {
                 ->name('admin.users.update_password');
         });
     });
-    //QC
+    //--QC
     Route::prefix('qc')->group(function(){
         Route::prefix('export')->group(function(){
             //Index
@@ -66,7 +74,7 @@ Route::group(['middleware' => 'auth'], function () {
         });
     });
 
-    //Production
+    //--Production
     Route::prefix('production')->group(function(){
         Route::prefix('work')->group(function(){
             //Index
@@ -81,7 +89,7 @@ Route::group(['middleware' => 'auth'], function () {
         });
     });
 
-    //Engineer
+    //--Engineer
     Route::prefix('engineer')->group(function(){
         Route::prefix('water_usage')->group(function(){
             //Index
@@ -111,7 +119,7 @@ Route::group(['middleware' => 'auth'], function () {
         })->name('engineer.index');
     });
 
-    //Hr
+    //--Hr
     Route::prefix('hr')->group(function(){
         Route::prefix('car_usage')->group(function(){
             //Index
@@ -144,7 +152,7 @@ Route::group(['middleware' => 'auth'], function () {
         });
     });
 
-    //Other
+    //--Other
     Route::prefix('other')->group(function () {
         //Repair Invoice
         Route::prefix('repair_invoice')->group(function () {
@@ -161,6 +169,13 @@ Route::group(['middleware' => 'auth'], function () {
                 ->name('other.repair_invoice.getInvoiceExcel');
         });
     });
+    //--Download App
+    Route::prefix('download_app')->group(function(){
+        Route::get('/','Web\DownloadApp\DownloadController@index')
+            ->name('download_app.index');
+        Route::get('create','Web\DownloadApp\DownloadController@create')
+            ->name('download_app.create');
+    });
 });
 
 //Clear Cache
@@ -170,7 +185,7 @@ Route::get('clear-cache', function() {
 });
 
 
-/*Tester*/
+/*Tes∫ter*/
 /*Add Random Work*/
 Route::resource('tester/work/random', 'Tester\WorkRandomController');
 Route::get('tester/employee/{number}', 'Tester\EmployeeController@addEmployee')

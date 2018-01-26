@@ -96,9 +96,11 @@ class ExpirationController extends Controller
             if ($request->input('multi_sticker_num') != null) {
                 $insideSticker = (float)$request->input('multi_sticker_num');
             }
-            $q_outside = number_format((float)$request->input('q_box') * (float)$request->input('multi_outside_num'), 2);
-            $q_inside = number_format((float)$request->input('q_box') * $insideInput, 2);
-            $q_sticker = number_format((float)$request->input('q_box') * $insideSticker, 2);
+//
+            $q_outside=(float)$request->input('q_box') * (float)$request->input('multi_outside_num');
+            $q_inside =(float)$request->input('q_box') * $insideInput;
+            $q_sticker=(float)$request->input('q_box') * $insideSticker;
+
             ExpirationBuild::create([
                 'p_exp_id' => $exp->id,
                 'round' => $request->input('round'),

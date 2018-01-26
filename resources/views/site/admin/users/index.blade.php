@@ -19,7 +19,9 @@
                             <tr>
                                 <td>username</td>
                                 <td>ชื่อ-สกุล</td>
+                                <td>ประเภทผู้ใช้</td>
                                 <td>ฝ่าย</td>
+                                <td>สิทธิ์การใช้งาน</td>
                                 <td>แก้ไข</td>
                                 <td>เปลี่ยนรหัสผ่าน</td>
                                 <td>ลบ</td>
@@ -31,13 +33,42 @@
                                 <tr>
                                     <td>{{$user->username}}</td>
                                     <td>{{$user->name}} {{$user->lastname}}</td>
-                                    @if($user->division)
-                                        <td>{{$user->division->name}}</td>
-                                    @else
-                                        <td> </td>
-                                    @endif
-                                    <td><a href="{{route('admin.users.edit',$user->id)}}" class="btn btn-primary">แก้ไข</a></td>
-                                    <td><a href="{{route('admin.users.edit_password',$user->id)}}" class="btn btn-warning">เปลี่ยนรหัสผ่าน</a></td>
+                                    <td>{{$user->type->name}}</td>
+                                    <td>
+                                        @if($user->division)
+                                            {{$user->division->name}}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <span style="margin-right:5px;">
+                                               @if($user->car_assign)
+                                                <i class="fa fa-check-square-o text-success" aria-hidden="true"></i>
+                                            @else
+                                                <i class="fa fa-square-o" aria-hidden="true"></i>
+                                            @endif
+                                            จัดรถ
+                                        </span>
+                                        <span style="margin-right:5px;">
+                                               @if($user->car_approve)
+                                                <i class="fa fa-check-square-o text-success" aria-hidden="true"></i>
+                                            @else
+                                                <i class="fa fa-square-o" aria-hidden="true"></i>
+                                            @endif
+                                            อนุมัติการขอใช้รถ
+                                        </span>
+                                        <span style="margin-right:5px;">
+                                               @if($user->repair_approve)
+                                                <i class="fa fa-check-square-o text-success" aria-hidden="true"></i>
+                                            @else
+                                                <i class="fa fa-square-o" aria-hidden="true"></i>
+                                            @endif
+                                            อนุมัติการส่งซ่อม
+                                        </span>
+                                    </td>
+                                    <td><a href="{{route('admin.users.edit',$user->id)}}"
+                                           class="btn btn-primary">แก้ไข</a></td>
+                                    <td><a href="{{route('admin.users.edit_password',$user->id)}}"
+                                           class="btn btn-warning">เปลี่ยนรหัสผ่าน</a></td>
                                     <td>
                                         <form onsubmit="return confirm('ต้องการจะลบรายการ ?')"
                                               action="{{route('admin.users.destroy',$user->id)}}" method="POST">
@@ -63,7 +94,7 @@
     <script>
         $(document).ready(function () {
             $('#user-table').DataTable({
-                "paging":   false
+                "paging": false
             });
         });
     </script>

@@ -4,7 +4,7 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="panel-title">
-                เอกสารแจ้งซ่อม
+                เอกสารฝ่ายประกันคุณภาพ
             </div>
         </div>
         <div class="panel-body">

@@ -30,7 +30,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        $divisions=Division::all();
+//        $divisions=Division::all();
+        $divisions=Division::whereIn('id',[1,6,7,9,11])->get();
         $types=UserType::all();
         return view('site.admin.users.create')->with([
             'divisions'=>$divisions,
@@ -93,7 +94,8 @@ class UserController extends Controller
     {
         $user=User::where('id',$id)->first();
         $types=UserType::all();
-        $divisions=Division::all();
+//        $divisions=Division::all();
+        $divisions=Division::whereIn('id',[1,6,7,9,11])->get();
         return view('site.admin.users.edit')->with([
             'user'=>$user,
             'divisions'=>$divisions,

@@ -1,6 +1,8 @@
 @extends('site.layouts.master')
 @section('content')
     {{--Admin Menu--}}
+    {{--ID 2 is Admin--}}
+    @if(Auth::user()->type->id==2)
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="panel-title">
@@ -8,7 +10,6 @@
             </div>
         </div>
         <div class="panel-body">
-            {{--Tracking--}}
             <div class="col-xs-12 col-md-4 admin-menu">
                 <a href="{{route('admin.users.index')}}">
                     <div class="icon">
@@ -23,6 +24,7 @@
             </div>
         </div>
     </div>
+    @endif
     {{--General Menu--}}
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -44,9 +46,24 @@
                     <div class="highlight bg-color-blue"></div>
                 </a>
             </div>
+            {{--Downlaod App--}}
+            <div class="col-xs-12 col-md-4 admin-menu">
+                <a href="{{route('download_app.index')}}">
+                    <div class="icon">
+                        {{--<img src="{{asset('images/icons/package2.svg')}}">--}}
+                        {{--<i class="fa fa-map-marker" aria-hidden="true"></i>--}}
+                    </div>
+                    <div class="title">
+                        Download Application
+                    </div>
+                    <div class="highlight bg-color-blue"></div>
+                </a>
+            </div>
+
+            {{--Still Waiting--}}
         </div>
     </div>
-    {{--General Menu--}}
+    {{--Division Menu--}}
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="panel-title">

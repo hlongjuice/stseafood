@@ -33,6 +33,9 @@ class WaterUsageResultController extends Controller
             }
         }
         $results=$this->calculateResult($month,$year);
+        //Testing
+//        return response()->json($results);
+        //End Testing
         $results->put('thai_month',$thai_month);
         $results->put('year',$year);
         return response()->json($results);
@@ -60,9 +63,13 @@ class WaterUsageResultController extends Controller
             'day' => $totalDay,
             'dateString' => $dateString
         ]);
+        //Testing
+//        return $records;
+            //End Testing
 
         $allDate = collect([]);
         $dateNow=$dateString;
+        //Loop For Every Day in Month
         for ($day = 1; $day <= $totalDay; $day++) {
             $ws_outside = $records['ws_outside'];
             $water_filtration = $records['water_filtration'];
@@ -75,8 +82,8 @@ class WaterUsageResultController extends Controller
             //Set Date`
             if ($day != 1) {
                 $dateNow = Carbon::createFromFormat('Y-m-d', $year . '-' . $month . '-' . $day)->toDateString();
-//                Carbon::setTestNow($nextDate);
             }
+            //Initial Data to 0 for every column
             $usedData = collect([
                 'date' => $dateNow,
                 'used' => collect([
@@ -90,6 +97,7 @@ class WaterUsageResultController extends Controller
                     'water_cooler' => $water_cooler['init'],
                 ])
             ]);
+            //All Loop Below Loop equal number of data and store data to usedData if have data in this day
             //Ws Outside
             for ($i = 0; $i < $ws_outside['data']->count(); $i++) {
                 if ($ws_outside['data'][$i]['date'] == $dateNow) {
@@ -147,18 +155,18 @@ class WaterUsageResultController extends Controller
         $avgSumUsed=collect([]);
         $avgUsed=collect([]);
         foreach($results['sumRow']['sumUsed'] as $keys=>$value){
-            $avg=number_format($value/$totalDay,2);
+            $avg=$value/$totalDay;
             $avgSumUsed->put($keys,$avg);
         }
         foreach ($results['sumRow']['used'] as $keys=>$value){
-            $avg=number_format($value/$totalDay,2);
+            $avg=$value/$totalDay;
             $avgUsed->put($keys,$avg);
         }
         $results->put('avgRow',[
             'sumUsed'=>$avgSumUsed,
             'used'=>$avgUsed
         ]);
-
+        //Then Result has $result =[ data , sumRow , AvgRow ] with child data
         return $results;
     }
 

@@ -123,11 +123,8 @@ class WaterSupplyOutSideController extends Controller
         $m_21_used = 0;
         //Last Month
         $dateInput = Carbon::createFromFormat('Y-m-d', $year . '-' . $month . '-1');
-//        Carbon::setTestNow($dateInput);
-//        $last_month = Carbon::yesterday()->month;
-//        $last_year = Carbon::yesterday()->year;
-        $last_month=$dateInput->subDay(1)->month;
-        $last_year=$dateInput->subDay(1)->year;
+        $last_month=$dateInput->subDay(1)->month; // The Month After Decrease 1 Day from 1st
+        $last_year=$dateInput->subDay(1)->year; // The Year After Decrease 1 Day from 1st
         $last_month_records = WaterSupplyOutSide::whereYear('date', $last_year)
             ->whereMonth('date', $last_month)
             ->get()->sortBy('date', SORT_NATURAL)->values()->groupBy('date');
@@ -148,7 +145,9 @@ class WaterSupplyOutSideController extends Controller
             }
             $i = 0;
             foreach ($results as $result) {
+                //If first
                 if ($i == 0) {
+                    //If have record from last month
                     if ($last_month_records->count() > 0) {
                         $last_month_records = $last_month_records->last()->last();
                         $m_pwa_used = CalculateController::getDailyUsed($result['last_record']['m_pwa'], $last_month_records['m_pwa']);
@@ -158,7 +157,6 @@ class WaterSupplyOutSideController extends Controller
                         $m_19_used = CalculateController::getDailyUsed($result['last_record']['m_19'], $last_month_records['m_19']);
                         $m_20_used = CalculateController::getDailyUsed($result['last_record']['m_20'], $last_month_records['m_20']);
                         $m_21_used = CalculateController::getDailyUsed($result['last_record']['m_21'], $last_month_records['m_21']);
-
                     }
                 } else {
                     $m_pwa_used = CalculateController::getDailyUsed($results[$i]['last_record']['m_pwa'], $results[$i - 1]['last_record']['m_pwa']);
@@ -196,5 +194,4 @@ class WaterSupplyOutSideController extends Controller
         ]);
         return $results;
     }
-
 }
