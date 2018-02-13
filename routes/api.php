@@ -483,6 +483,8 @@ Route::group(['middleware' => 'auth:api'], function () {
             Route::get('get_record_by_date/{date}', 'Api\Eng\BoilerController@getRecordByDate');
             //Add Records
             Route::post('add_record', 'Api\Eng\BoilerController@addRecord');
+            //Add Global Details
+            Route::post('add_global_details','Api\Eng\BoilerController@addGlobalDetails');
             //Update Record
             Route::post('update_record', 'Api\Eng\BoilerController@updateRecord');
             //Delete Record

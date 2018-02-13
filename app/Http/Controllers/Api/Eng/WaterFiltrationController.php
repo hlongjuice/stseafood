@@ -40,10 +40,11 @@ class WaterFiltrationController extends Controller
             if ($i == 0) {
                 $record->p1_flow = CalculateController::getUsed($record->p1_mm1, ($last_yesterday_used) ? $last_yesterday_used->p1_mm1 : null);
                 $record->p2_flow = CalculateController::getUsed($record->p2_mm2, ($last_yesterday_used) ? $last_yesterday_used->p2_mm2 : null);
-                $record->mm_1_2_flow = $record->p1_mm1 + $record->p2_mm2;
+                $record->mm_1_2_flow = $record->p1_flow + $record->p2_flow;
             } else {
                 $record->p1_flow = CalculateController::getUsed($record->p1_mm1, $records[$i - 1]->p1_mm1);
                 $record->p2_flow = CalculateController::getUsed($record->p2_mm2, $records[$i - 1]->p2_mm2);
+                $record->mm_1_2_flow = $record->p1_flow + $record->p2_flow;
             }
             //If has Water Meter
             if ($water_meters) {

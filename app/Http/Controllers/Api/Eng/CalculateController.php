@@ -7,30 +7,30 @@ use App\Http\Controllers\Controller;
 
 class CalculateController extends Controller
 {
-    public static function getFlow($start, $end)
+    public static function getFlow($current, $previous)
     {
-        if ($start == null || $end == null) {
+        if ($current == null || $previous == null) {
             return null;
         }
-        return $start - $end;
+        return $current - $previous;
     }
 
     //Used
-    public static function getUsed($start, $end)
+    public static function getUsed($current, $previous)
     {
-        if ($start == null || $end == null) {
+        if ($current == null || $previous == null) {
             return null;
         }
-        return $start - $end;
+        return $current - $previous;
     }
 
     //Daily Used
-    public static function getDailyUsed($start, $end)
+    public static function getDailyUsed($current, $previous)
     {
-        if ($start == null || $end == null) {
+        if ($current == null || $previous == null) {
             return null;
         }
-        return $start - $end;
+        return $current - $previous;
     }
     //Monthly Result
     public static function getMonthlyUsed(){

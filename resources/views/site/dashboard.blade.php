@@ -50,11 +50,20 @@
             <div class="col-xs-12 col-md-4 admin-menu">
                 <a href="{{route('download_app.index')}}">
                     <div class="icon">
-                        {{--<img src="{{asset('images/icons/package2.svg')}}">--}}
-                        {{--<i class="fa fa-map-marker" aria-hidden="true"></i>--}}
                     </div>
                     <div class="title">
                         Download Application
+                    </div>
+                    <div class="highlight bg-color-blue"></div>
+                </a>
+            </div>
+            {{--Update Web File --}}
+            <div class="col-xs-12 col-md-4 admin-menu">
+                <a href="{{route('download_app.webUpdateFile')}}">
+                    <div class="icon">
+                    </div>
+                    <div class="title">
+                        Update Web Files
                     </div>
                     <div class="highlight bg-color-blue"></div>
                 </a>

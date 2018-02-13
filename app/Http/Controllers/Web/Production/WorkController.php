@@ -77,8 +77,8 @@ class WorkController extends Controller
             'productionShrimpType',
             'productionShrimpSize'
         )->where('id',$id)->first();
-        $sumAllWork=number_format($work->productionWorkPerformance->sum('weight'));
-        $avgAllWork=number_format($work->productionWorkPerformance->avg('weight'));
+        $sumAllWork=number_format($work->productionWorkPerformance->sum('weight'),2);
+        $avgAllWork=number_format($work->productionWorkPerformance->avg('weight'),2);
         $employeeWorks=$work->productionWorkPerformance->groupBy('em_id');
         $dateInput = Carbon::createFromFormat('Y-m-d',$work->productionDateTime->productionDate->date);
         $day = $dateInput->day;
@@ -97,8 +97,8 @@ class WorkController extends Controller
         $diffInMinute=$time_start->diffInMinutes($time_end);
         foreach ($employeeWorks as $employee =>$item){
             $item->em_id=$employee;
-            $item->sumWeight=number_format($item->sum('weight'));
-            $item->avgWeight=number_format($item->sum('weight')/$diffInMinute*60);
+            $item->sumWeight=number_format($item->sum('weight'),2);
+            $item->avgWeight=number_format($item->sum('weight')/$diffInMinute*60,2);
         }
         $results=collect([
             'sumAllWork'=>$sumAllWork,

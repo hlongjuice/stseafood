@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Web\Other;
 
 use App\Models\RepairInvoice;
@@ -187,14 +188,26 @@ class RepairInvoiceController extends Controller
         })->export('xls');
     }
 
-    public function getExcel($id,Request $request){
+    public function getExcel($id, Request $request)
+    {
         $invoice = RepairInvoice::with('approver', 'sender', 'division')->where('id', $id)
             ->first();
-        $data=[
-            'invoice'=>$invoice,
-            'number'=>$request->input('invoice_number')
+        $data = [
+            'invoice' => $invoice,
+            'number' => $request->input('invoice_number')
         ];
-        $pdf=Pdf::loadView('site.other.repair_invoice.report',$data);
+        $pdf = Pdf::loadView('site.other.repair_invoice.report', $data, [], [
+            'format' => 'A4-L',
+            'custom_font_path' => base_path('resources/fonts/thsarabun/'),
+            'custom_font_data' => [
+                'thsarabunnew' => [
+                    'R' => 'THSarabunNew.ttf',    // regular font
+                    'B' => 'THSarabunNew-Bold.ttf',       // optional: bold font
+                    'I' => 'THSarabunNew-Italic.ttf',     // optional: italic font
+                    'BI' => 'THSarabunNew-Bold-Italic.ttf', // optional: bold-italic font
+                ]
+            ]
+        ]);
         $pdf->mpdf->title="ใบแจ้งซ่อม";
         return $pdf->stream();
     }

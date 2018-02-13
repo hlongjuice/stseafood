@@ -48,7 +48,7 @@
                                     <td>{{$record->sender->name}} {{$record->sender->lastname}}</td>
                                     {{--<td> ระบุหมายเลขใบแจ้งซ่อม : <input type="text" id="invoice_number"> <a id="btn-download"--}}
                                            {{--class="btn btn-primary not-active">ดาวโหลด</a></td>--}}
-                                    <td> ระบุหมายเลขใบแจ้งซ่อม :
+                                    <td> ระบุหมายเลขใบแจ้งซ่อม เช่น : F-EN-001 Rev.3A
                                         <form method="POST" action="{{route('other.repair_invoice.getInvoiceExcel',$record->id)}}">
                                             {{ csrf_field() }}
                                             <input type="text" id="invoice_number" name="invoice_number">

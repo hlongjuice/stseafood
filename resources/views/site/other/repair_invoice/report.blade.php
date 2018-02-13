@@ -8,6 +8,7 @@
     {{--<link id="Main-File" rel="Main-File" href="../invoice_report.htm">--}}
     <!-- <link rel=File-List href=filelist.xml> -->
     {{--<link rel="Stylesheet" href="stylesheet.css">--}}
+        {{--<link rel="stylesheet" href="{{asset('css/pdf/pdf/css')}}">--}}
     <style>
         <!--
         table {
@@ -21,10 +22,13 @@
             mso-footer-margin: .3in;
             mso-page-orientation: landscape;
         }
+        .test-thai{
+            font-family: 'thsarabunnew' , sans-serif;
+        }
 
         -->
     </style>
-    @extends('site.other.repair_invoice.report_style')
+    @extends('site.other.repair_invoice.report_style3')
 </head>
 
 <body link="blue" vlink="purple">

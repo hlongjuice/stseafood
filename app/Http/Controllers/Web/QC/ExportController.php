@@ -209,6 +209,7 @@ class ExportController extends Controller
     //Table Content
     public function setTableContent($sheet, $result)
     {
+//        dd($result);
         $i = 8;
         foreach ($result->shrimpReceiving as $item) {
 //            dd($item);
@@ -391,9 +392,9 @@ class ExportController extends Controller
             $item->avg_temp = $item->waterTemp->avg('value');
             //Defect
             $item->df_s_dead_p = $this->dfToPercent($item->df_shrimp_dead);
-            $item->df_s_semi_soft_p = $this->dfToPercent($item->df_semi_soft);
+            $item->df_s_semi_soft_p = $this->dfToPercent($item->df_shrimp_semi_soft);
             $item->df_s_soft_shell_p = $this->dfToPercent($item->df_shrimp_soft_shell);
-            $item->df_s_scar_p = $this->dfToPercent($item->df_shrimp_scar_p);
+            $item->df_s_scar_p = $this->dfToPercent($item->df_shrimp_scar);
             $item->df_s_bk_line_p = $this->dfToPercent($item->df_shrimp_bk_line);
             $item->df_s_disabled_p = $this->dfToPercent($item->df_shrimp_disabled);
         }

@@ -175,6 +175,8 @@ Route::group(['middleware' => 'auth'], function () {
             ->name('download_app.index');
         Route::get('create','Web\DownloadApp\DownloadController@create')
             ->name('download_app.create');
+        Route::get('web_update','Web\DownloadApp\DownloadController@webUpdateFile')
+            ->name('download_app.webUpdateFile');
     });
 });
 
