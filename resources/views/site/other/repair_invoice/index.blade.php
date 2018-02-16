@@ -37,7 +37,7 @@
                                 <td>เวลา</td>
                                 <td>เครื่องจักร</td>
                                 <td>ผู้ส่ง</td>
-                                <td>ดาวโหลด</td>
+                                <td>ดาวโหลด **หมายเลขใบแจ้งซ่อมสามารถแก้ไขได้</td>
                             </tr>
                             </thead>
                             <tbody>
@@ -48,10 +48,10 @@
                                     <td>{{$record->sender->name}} {{$record->sender->lastname}}</td>
                                     {{--<td> ระบุหมายเลขใบแจ้งซ่อม : <input type="text" id="invoice_number"> <a id="btn-download"--}}
                                            {{--class="btn btn-primary not-active">ดาวโหลด</a></td>--}}
-                                    <td> ระบุหมายเลขใบแจ้งซ่อม เช่น : F-EN-001 Rev.3A
+                                    <td>
                                         <form method="POST" action="{{route('other.repair_invoice.getInvoiceExcel',$record->id)}}">
                                             {{ csrf_field() }}
-                                            <input type="text" id="invoice_number" name="invoice_number">
+                                            <input type="text" id="invoice_number" name="invoice_number" value="F-EN-001 Rev.3A">
                                             <button class="btn btn-primary" type="submit">ดาวโหลด</button>
                                         </form>
                                     </td>

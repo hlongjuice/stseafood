@@ -1,29 +1,4 @@
 <style>
-
-    {{--@font-face {--}}
-        {{--font-family: 'thsarabunnew';--}}
-        {{--src: {{asset('fonts/thsarabun/THSarabunNew.eot')}} !important;--}}
-        {{--src: {{asset('fonts/thsarabun/THSarabunNew.eot?#iefix')}} format('embedded-opentype'),--}}
-             {{--{{asset('fonts/thsarabun/THSarabunNew.woff')}} format('woff'),--}}
-             {{--{{asset('fonts/thsarabun/THSarabunNew.ttf')}} format('truetype') !important;--}}
-        {{--font-weight: normal;--}}
-        {{--font-style: normal;--}}
-    {{--}--}}
-    {{--@font-face {--}}
-        {{--font-family: 'thsarabunnew';--}}
-        {{--src: {{asset('fonts/thsarabun/THSarabunNew-Bold.eot')}} !important;--}}
-        {{--src: {{asset('fonts/thsarabun/THSarabunNew-Bold.eot?#iefix')}} format('embedded-opentype'),--}}
-             {{--{{asset('fonts/thsarabun/THSarabunNew-Bold.woff')}} format('woff'),--}}
-             {{--{{asset('fonts/thsarabun/THSarabunNew-Bold.ttf')}} format('truetype') !important;--}}
-        {{--font-weight: bold;--}}
-        {{--font-style: normal;--}}
-    {{--}--}}
-    {{--@font-face {--}}
-        {{--font-family: 'TH Baijam';--}}
-        {{--src: {{asset('fonts/thsarabun/TH Baijam.ttf')}} format('truetype') !important;--}}
-        {{--font-weight: normal;--}}
-        {{--font-style: normal;--}}
-    {{--}--}}
     tr
     {mso-height-source:auto;}
     col
@@ -256,6 +231,9 @@
         mso-char-indent-count:1;}
     .xl83
     {mso-style-parent:style0;
+        font-size:14.0pt;
+        font-weight: bold;
+        /*text-decoration: underline;*/
         border-top:none;
         border-right:.5pt solid black;
         border-bottom:none;

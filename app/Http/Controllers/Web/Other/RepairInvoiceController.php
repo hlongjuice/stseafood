@@ -70,7 +70,7 @@ class RepairInvoiceController extends Controller
                 $sheet->mergeCells('A3:L3');
                 //Surat SeaFood Header
                 $sheet->cell('A1', function ($cell) {
-                    $cell->setValue('บริษัท สุราษฎร์ซีฟู๊ดส์ จำกัด');
+                    $cell->setValue('บริษัท สุราษฎร์ซีฟู้ดส์ จำกัด');
                     $cell->setFont(array(
                         'size' => '18',
                         'bold' => true));
@@ -188,6 +188,7 @@ class RepairInvoiceController extends Controller
         })->export('xls');
     }
 
+    //Get PDF ใช้อันนี้อยู่สำหรับแปลงเป็น pdf
     public function getExcel($id, Request $request)
     {
         $invoice = RepairInvoice::with('approver', 'sender', 'division')->where('id', $id)
@@ -196,19 +197,22 @@ class RepairInvoiceController extends Controller
             'invoice' => $invoice,
             'number' => $request->input('invoice_number')
         ];
-        $pdf = Pdf::loadView('site.other.repair_invoice.report', $data, [], [
-            'format' => 'A4-L',
-            'custom_font_path' => base_path('resources/fonts/thsarabun/'),
-            'custom_font_data' => [
-                'thsarabunnew' => [
-                    'R' => 'THSarabunNew.ttf',    // regular font
-                    'B' => 'THSarabunNew-Bold.ttf',       // optional: bold font
-                    'I' => 'THSarabunNew-Italic.ttf',     // optional: italic font
-                    'BI' => 'THSarabunNew-Bold-Italic.ttf', // optional: bold-italic font
-                ]
-            ]
-        ]);
-        $pdf->mpdf->title="ใบแจ้งซ่อม";
+//        $pdf = Pdf::loadView('site.other.repair_invoice.report', $data, [], [
+//            'format' => 'A4-L',
+//            'custom_font_path' => base_path('resources/fonts/thsarabun/'),
+//            'custom_font_data' => [
+//                'thsarabunnew' => [
+//                    'R' => 'THSarabunNew.ttf',    // regular font
+//                    'B' => 'THSarabunNew-Bold.ttf',       // optional: bold font
+//                    'I' => 'THSarabunNew-Italic.ttf',     // optional: italic font
+//                    'BI' => 'THSarabunNew-Bold-Italic.ttf', // optional: bold-italic font
+//                ]
+//            ]
+//        ]);
+        $pdf = Pdf::loadView('site.other.repair_invoice.report', $data);
+        $pdf->mpdf->title = "ใบแจ้งซ่อม";
+//        dd($pdf);
         return $pdf->stream();
+//      return view('site.other.repair_invoice.report')->with($data);
     }
 }

@@ -59,13 +59,14 @@ class RecorderResultController extends Controller
                 $last_five_shrimp_dead = $last_five_records->sum('real_shrimp_dead');
             }
             $shrimp_dead = $recorder->shrimpReceiving->sum('real_shrimp_dead');
+            $recorder->real_shrimp_soft_percent=0;
             if ($total_shrimp_weight > 0) {
                 $total_shrimp_dead_percent = ($total_shrimp_dead / $total_shrimp_weight) * 100;
                 $shrimp_dead_percent = ($shrimp_dead / $total_shrimp_weight) * 100;
                 $last_five_shrimp_dead_percent = ($last_five_shrimp_dead / $total_shrimp_weight) * 100;
+                $recorder->real_shrimp_soft_percent=number_format(($recorder->real_shrimp_soft/($total_shrimp_weight))*100,2);
             }
 
-            $recorder->real_shrimp_soft_percent=number_format(($recorder->real_shrimp_soft/$total_shrimp_weight)*100,2);
             $recorder->shrimp_dead = $shrimp_dead;
             $recorder->last_five_shrimp_dead = $last_five_shrimp_dead;
             $recorder->total_shrimp_dead = $total_shrimp_dead;
@@ -130,11 +131,11 @@ class RecorderResultController extends Controller
             /*Monthly Result*/
             $month->put('m_total_shrimp_weight', $month->sum('d_total_shrimp_weight'));
             $month->put('m_shrimp_dead', $month->sum('d_shrimp_dead'));
-            $month->put('m_shrimp_dead_percent', $month->sum('d_shrimp_dead_percent'));
+            $month->put('m_shrimp_dead_percent', $month['m_shrimp_dead']/$month['m_total_shrimp_weight']*100);
             $month->put('m_last_five_shrimp_dead', $month->sum('d_last_five_shrimp_dead'));
+            $month->put('m_last_five_shrimp_dead_percent', $month['m_last_five_shrimp_dead']/$month['m_total_shrimp_weight']*100);
             $month->put('m_total_shrimp_dead', $month->sum('d_total_shrimp_dead'));
-            $month->put('m_total_shrimp_dead_percent', $month->sum('d_total_shrimp_dead_percent'));
-            $month->put('m_last_five_shrimp_dead_percent', $month->sum('d_last_five_shrimp_dead_percent'));
+            $month->put('m_total_shrimp_dead_percent', $month['m_total_shrimp_dead']/$month['m_total_shrimp_weight']*100);
             $month->put('month', (int)Carbon::createFromFormat('Y-m-d', $month[0]->date)->format('m'));
             $month->put('year', (int)Carbon::createFromFormat('Y-m-d', $month[0]->date)->format('Y'));
         }

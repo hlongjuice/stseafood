@@ -74,7 +74,7 @@
         </td>
         <td colspan="2" class="xl69">เวลารับ ..................................</td>
         <td colspan="4" class="xl82" style="border-left:none">1)
-            .........................................................................................................
+            ...........................................................
         </td>
     </tr>
     <tr height="40" style="mso-height-source:userset;height:30.0pt">
@@ -87,7 +87,7 @@
         </td>
         <td colspan="2" class="xl69">ผู้สั่งงาน .................................</td>
         <td colspan="4" class="xl82" style="border-left:none">2)
-            .........................................................................................................
+            ...........................................................
         </td>
     </tr>
     <tr height="40" style="mso-height-source:userset;height:30.0pt">
@@ -99,35 +99,35 @@
         <td class="xl72">&nbsp;</td>
         <td class="xl73">&nbsp;</td>
         <td colspan="4" class="xl82" style="border-left:none">3)
-            .........................................................................................................
+            ...........................................................
         </td>
     </tr>
     <tr height="40" style="mso-height-source:userset;height:30.0pt">
         <td colspan="4" height="40" class="xl82" style="height:30.0pt">รายละเอียดการชำรุด</td>
         <td colspan="4" class="xl81" style="border-left:none">รายการซ่อม
-            <span> .........................................................................</span>
+            <span> ....................................................</span>
         </td>
         <td colspan="4" class="xl82" style="border-left:none">4)
-            .........................................................................................................
+            ...........................................................
         </td>
     </tr>
     <tr height="40" style="mso-height-source:userset;height:30.0pt">
         <td colspan="4" height="40" class="xl83"
-            style="height:30.0pt;padding-left:10px; padding-top:5px;">{{$invoice->item_details}}</td>
+            style="height:30.0pt;padding-left:10px;">{{$invoice->item_details}}</td>
         <td colspan="4" class="xl84" style="border-left:none">
-            ..............................................................................................................
+            ................................................................
         </td>
         <td colspan="4" class="xl82" style="border-left:none">5)
-            .........................................................................................................
+            ...........................................................
         </td>
     </tr>
     <tr height="40" style="mso-height-source:userset;height:30.0pt">
         <td colspan="4" height="40" class="xl83" style="height:30.0pt">&nbsp;</td>
         <td colspan="4" class="xl84" style="border-left:none">
-            ..............................................................................................................
+            ................................................................
         </td>
         <td colspan="4" class="xl82" style="border-left:none">6)
-            .........................................................................................................
+            ...........................................................
         </td>
     </tr>
     <tr height="40" style="mso-height-source:userset;height:30.0pt">
@@ -137,7 +137,7 @@
         <td class="xl70"></td>
         <td class="xl69">&nbsp;</td>
         <td colspan="4" class="xl84" style="border-left:none">
-            ..............................................................................................................
+            ................................................................
         </td>
         <td class="xl68" style="border-left:none">&nbsp;</td>
         <td class="xl70"></td>
@@ -151,7 +151,7 @@
         <td class="xl70"></td>
         <td class="xl69">&nbsp;</td>
         <td colspan="4" class="xl84" style="border-left:none">
-            ..............................................................................................................
+            ................................................................
         </td>
         <td colspan="4" class="xl82" style="border-left:none">[<span style="mso-spacerun:yes">&nbsp;&nbsp; </span>]<span
                     style="mso-spacerun:yes">&nbsp; </span>ทำความสะอาดหลังการซ่อม
@@ -164,7 +164,7 @@
         <td class="xl72">&nbsp;</td>
         <td class="xl73">&nbsp;</td>
         <td colspan="4" class="xl84" style="border-left:none">
-            ..............................................................................................................
+            ................................................................
         </td>
         <td colspan="2" class="xl68" style="border-left:none">ซ่อมเสร็จวันที่
             .........................
@@ -174,7 +174,7 @@
     <tr height="40" style="mso-height-source:userset;height:30.0pt">
         <td colspan="4" height="40" class="xl81" style="height:30.0pt">ประเมินการซ่อม</td>
         <td colspan="4" class="xl84" style="border-left:none">
-            ..............................................................................................................
+            ................................................................
         </td>
         <td colspan="2" class="xl71" style="border-left:none">ผู้ซ่อม
             .......................................
@@ -194,7 +194,7 @@
         </td>
         <td class="xl69">&nbsp;</td>
         <td colspan="4" class="xl84" style="border-left:none">
-            ..............................................................................................................
+            ................................................................
         </td>
         <td colspan="2" class="xl65" style="border-left:none">[<span style="mso-spacerun:yes">&nbsp;&nbsp; </span>]<span
                     style="mso-spacerun:yes">&nbsp; </span>ไม่ต้องลงประวัติ
@@ -208,7 +208,7 @@
             <span>.......................................................................</span>
         </td>
         <td colspan="4" class="xl84" style="border-left:none">
-            ..............................................................................................................
+            ................................................................
         </td>
         <td colspan="2" class="xl68" style="border-left:none">[<span style="mso-spacerun:yes">&nbsp;&nbsp; </span>]<span
                     style="mso-spacerun:yes">&nbsp; </span>ลงประวัติ
@@ -222,7 +222,7 @@
             .....................................................................
         </td>
         <td colspan="4" class="xl84" style="border-left:none">
-            ..............................................................................................................
+            ................................................................
         </td>
         <td colspan="2" class="xl68" style="border-left:none">ผู้ตรวจสอบ
             ...........................
@@ -235,7 +235,7 @@
         </td>
         <td colspan="2" class="xl69">วันที่ .......................................</td>
         <td colspan="4" class="xl84" style="border-left:none">
-            ..............................................................................................................
+            ................................................................
         </td>
         <td class="xl68" style="border-left:none">ผจก.รับทราบ</td>
         <td colspan="2" class="xl85">.................................</td>
@@ -282,7 +282,7 @@
         <td width="93" style="width:70pt"></td>
         <td width="93" style="width:70pt"></td>
         <td width="93" style="width:70pt"></td>
-        <td width="93" style="width:70pt;padding-top:5px; font-size:14.0pt;">{{$number}}</td>
+        <td width="93" style="width:70pt;padding-top:5px;">{{$number}}</td>
     </tr>
     <!--[endif]-->
     </tbody>

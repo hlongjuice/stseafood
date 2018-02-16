@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
+use PhpParser\Node\Expr\Cast\Object_;
 
 class ExportController extends Controller
 {
@@ -60,7 +61,7 @@ class ExportController extends Controller
         //Header Table
         $sheet->mergeCells('A1:X1');
         $sheet->cell('A1', function ($cell) {
-            $cell->setValue('บริษัท สุราษฎร์ซีฟู๊ดส์ จำกัดบริษัท สุราษฎร์ซีฟู๊ดส์ จำกัด');
+            $cell->setValue('บริษัท สุราษฎร์ซีฟู้ดส์ จำกัดบริษัท');
 
         });
         $sheet->mergeCells('A2:X2');
@@ -124,7 +125,7 @@ class ExportController extends Controller
         $sheet->cell('E5', 'เล็ก');
         $sheet->cell('E7', 'กรัม');
         $sheet->cell('F5', 'U.F.');
-        $sheet->cell('F7', 'กรัม');
+        $sheet->cell('F7', '');
 
         //Defect
         $sheet->mergeCells('G5:R5');
@@ -209,13 +210,11 @@ class ExportController extends Controller
     //Table Content
     public function setTableContent($sheet, $result)
     {
-//        dd($result);
         $i = 8;
-        foreach ($result->shrimpReceiving as $item) {
-//            dd($item);
+//        foreach ($result->shrimpReceiving as $item) {
+        foreach($result->allShrimpReceiving as $item){
             $water_temp = "";
             $count = 0;
-//            dd($temp->round);
             $sheet->setHeight($i, 25);
 
             $sheet->cell('A' . $i, $item->round);
@@ -260,12 +259,12 @@ class ExportController extends Controller
             $sheet->cell('T' . $i, number_format($item->car_waiting_time,2));
 
             //Real Shrimp Dead
-            $sheet->cell('U' . $i, $item->real_shrimp_dead);
-            $sheet->cell('V' . $i, $item->r_shrimp_dead_percent);
+            $sheet->cell('U' . $i, number_format($item->real_shrimp_dead,2));
+            $sheet->cell('V' . $i, number_format($item->r_shrimp_dead_percent,2));
 
             //Result Weight
-            $sheet->cell('W' . $i, $item->weight);
-            $sheet->cell('X' . $i, $item->sumRowWeight);
+            $sheet->cell('W' . $i, number_format($item->weight,2));
+            $sheet->cell('X' . $i, number_format($item->sumRowWeight,2));
             $sheet->getStyle('A' . $i . ':X' . $i)
                 ->getAlignment()
                 ->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER)
@@ -380,13 +379,16 @@ class ExportController extends Controller
             ->where('id', $id)->first();
         $sumWeight = 0;
 
+
         foreach ($recorder->shrimpReceiving as $item) {
             $shrimp_dead_percent = 0;
             //Sum Row Weight
             $sumWeight += $item->weight;
             $item->sumRowWeight = $sumWeight;
             //Shrimp Dead Percent
-            $shrimp_dead_percent = number_format($item->real_shrimp_dead / $item->weight * 100, 2);
+            if($item->weight !=0){
+                $shrimp_dead_percent = number_format($item->real_shrimp_dead / $item->weight * 100, 2);
+            }
             $item->r_shrimp_dead_percent = $shrimp_dead_percent;
             //Avg Temp
             $item->avg_temp = $item->waterTemp->avg('value');
@@ -398,6 +400,8 @@ class ExportController extends Controller
             $item->df_s_bk_line_p = $this->dfToPercent($item->df_shrimp_bk_line);
             $item->df_s_disabled_p = $this->dfToPercent($item->df_shrimp_disabled);
         }
+        //Copy Everything in shrimpReceiving to allShrimpReceiving before splice
+        $recorder->allShrimpReceiving = $recorder->shrimpReceiving->all();
 
         $recorder->total_shrimp_weight = $recorder->shrimpReceiving->sum('weight');
         //If Have Last Five Status
@@ -406,10 +410,11 @@ class ExportController extends Controller
             $last_five_records = $recorder->shrimpReceiving->splice(-5);
             //Last Five Shrimp Dead
             $recorder->last_five_shrimp_dead = $last_five_records->sum('real_shrimp_dead');
+            $recorder->last_five_shrimp_dead_p = $this->shrimpDeadToPercent($recorder->last_five_shrimp_dead, $recorder->total_shrimp_weight);
         } else {
             //Last Five Shrimp Dead Percent
-            $recorder->last_five_shrimp_dead_p = $this->shrimpDeadToPercent($recorder->last_five_shrimp_dead, $recorder->total_shrimp_weight);
             $recorder->last_five_shrimp_dead = 0;
+            $recorder->last_five_shrimp_dead_p = $this->shrimpDeadToPercent($recorder->last_five_shrimp_dead, $recorder->total_shrimp_weight);
         }
         //Shrimp dead
         $recorder->shrimp_dead = $recorder->shrimpReceiving->sum('real_shrimp_dead');
@@ -423,7 +428,7 @@ class ExportController extends Controller
         $recorder->total_shrimp_dead_p = $recorder->shrimp_dead_p + $recorder->last_five_shrimp_dead_p;
 
         $recorder->small_shrimp_b_p=$this->shrimpDeadToPercent($recorder->small_shrimp_b,$recorder->total_shrimp_weight);
-      // dd($recorder);
+//       dd($recorder);
         return $recorder;
     }
 
