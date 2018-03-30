@@ -24,10 +24,10 @@ class BoilerController extends Controller
         $boiler_2 = collect([]);
         $boiler_2_list = collect([]);
         $timeRecords = collect([]);
-        $water_meter_used_time=null;
-        $water_meter_used=null;
-        $oil_meter_used=null;
-        $water_oil_used_time=0;
+        $water_meter_used_time = null;
+        $water_meter_used = null;
+        $oil_meter_used = null;
+        $water_oil_used_time = 0;
 
         $records = Boiler::with('timeRecords.allDetails')->whereDate('date', $date)
             ->first();
@@ -68,22 +68,22 @@ class BoilerController extends Controller
             if ($records->water_oil_start_time && $records->water_oil_end_time) {
                 $water_meter_start_time = Carbon::createFromFormat('H:i:s', $records->water_oil_start_time);
                 $water_meter_end_time = Carbon::createFromFormat('H:i:s', $records->water_oil_end_time);
-                $water_oil_used_time=$water_meter_end_time->diffInMinutes($water_meter_start_time)/60;
+                $water_oil_used_time = $water_meter_end_time->diffInMinutes($water_meter_start_time) / 60;
 
                 $water_meter_used = $records->water_meter_end - $records->water_meter_start;
                 $oil_meter_used = $records->oil_meter_end - $records->oil_meter_start;
             }
-            $fw_boiler_1_used=null;
-            $fw_boiler_2_used=null;
-            if($boiler_1_list&&$boiler_1_list->count()>1){
-                $fw_boiler_1_used=$boiler_1_list->last()['details']['fw_meter']-$boiler_1_list->first()['details']['fw_meter'];
+            $fw_boiler_1_used = null;
+            $fw_boiler_2_used = null;
+            if ($boiler_1_list && $boiler_1_list->count() > 1) {
+                $fw_boiler_1_used = $boiler_1_list->last()['details']['fw_meter'] - $boiler_1_list->first()['details']['fw_meter'];
             }
-            if($boiler_2_list&&$boiler_2_list->count()>1){
-                $fw_boiler_2_used=$boiler_2_list->last()['details']['fw_meter'] - $boiler_2_list->first()['details']['fw_meter'];
+            if ($boiler_2_list && $boiler_2_list->count() > 1) {
+                $fw_boiler_2_used = $boiler_2_list->last()['details']['fw_meter'] - $boiler_2_list->first()['details']['fw_meter'];
             }
 //            $boiler_1_list->fist()
-            $global_details_used->put('fw_boiler_1_used',$fw_boiler_1_used);
-            $global_details_used->put('fw_boiler_2_used',$fw_boiler_2_used);
+            $global_details_used->put('fw_boiler_1_used', $fw_boiler_1_used);
+            $global_details_used->put('fw_boiler_2_used', $fw_boiler_2_used);
             $global_details_used->put('water_meter_used', $water_meter_used);
             $global_details_used->put('oil_meter_used', $oil_meter_used);
             $global_details_used->put('water_oil_used_time', $water_oil_used_time);
@@ -93,8 +93,8 @@ class BoilerController extends Controller
             'data' => $timeRecords,
             'date' => $date,
             'boiler_1' => $boiler_1_list,
-            'boiler_1_first'=>$boiler_1_list->first(),
-            'boiler_1_last'=>$boiler_1_list->last(),
+            'boiler_1_first' => $boiler_1_list->first(),
+            'boiler_1_last' => $boiler_1_list->last(),
             'boiler_2' => $boiler_2_list,
             'global_details_used' => $global_details_used
         ]);
@@ -188,12 +188,20 @@ class BoilerController extends Controller
     {
 //        $result = BoilerDetails::where('id', $id)->delete();
         $result = DB::transaction(function () use ($id) {
-            $record = BoilerDetails::with('timeRecord.allDetails')
+            $record = BoilerDetails::with('timeRecord.allDetails', 'timeRecord.globalDetails')
                 ->where('id', $id)
                 ->first();
-            if ($record->timeRecord->allDetails->count() < 2) {// has only one boiler maybe 1 or 2 then delete this time_record too
+            $globalDetailsID = $record->timeRecord->globalDetails->id;
+            $boiler = Boiler::with('timeRecords')
+                ->where('id', $globalDetailsID)->first();
+            //ถ้ามีการบันทึกทั้ง boiler 1 และ 2 ลบเฉพาะค่า boiler ที่เลือก แต่ถ้ามีแค่ 1 ลบช่วงเวลาไปด้วย
+            if ($record->timeRecord->allDetails->count() < 2) {
                 BoilerTime::destroy($record->timeRecord->id);
                 BoilerDetails::destroy($id);
+                //ทำการลบวันที่ออกด้วยหากไม่เหลือเวลาบันทึกอยู่แล้ว
+                if ($boiler->timeRecords->count() == 1) {
+                    Boiler::destroy($globalDetailsID);
+                }
             } else { // delete only this details
                 BoilerDetails::destroy($id);
             }
@@ -202,48 +210,132 @@ class BoilerController extends Controller
         return response()->json($result);
     }
 
-    //Get Monthly Result
+    //Get Month แบบใหม่ คำนวนโดยหาผลต่างจากเวลาเริ่มและสิ้นสุดในวันเดียวกัน
     public static function getMonthlyResult($year, $month)
     {
         $boiler1_meter_used = 0;
         $boiler2_meter_used = 0;
-        //Last Month
+        //Get Current Month
+        //เรียงลำดับข้อมูลใหม่ตามวันที่ และ แยกข้อมูลตามวันที่
+        $records = Boiler::with('timeRecords.allDetails')
+            ->whereYear('date', $year)
+            ->whereMonth('date', $month)
+            ->get()->sortBy('date', SORT_NATURAL)->values()
+            ->groupBy('date');
+
+        //Debug
+
+        //End Debug
+        $results = collect([]);
+        if ($records->count() > 0) {//ถ้ามีข้อมูลในเดือนนี้
+            foreach ($records as $key => $values) {
+                //เรียงลำดับการบันทึกตามเวลาบันทึกจากน้อยไปมาก และ เลือกเอาเฉพาะค่าสุดท้าย เพื่อจะนำไปคำนวนหาส่วนต่าง
+                $sortedRecord = $values[0]->timeRecords->sortBy('time_record', SORT_NATURAL)
+                    ->values();
+                //เวลาแรกที่บันทึก
+                $first_record = $sortedRecord->first();
+                if ($first_record) {
+                    //เรียงลำดับ boiler จากน้อยไปมาก
+                    $first_record = $first_record->allDetails->sortBy('boiler_number')->values();
+                }
+                //เวลาสุดท้ายที่บันทึก
+                $last_record = $sortedRecord->last();
+                if ($last_record) {//If have boiler details
+                    //เรียงลำดับ boiler จากน้อยไปมาก
+                    $last_record = $last_record->allDetails->sortBy('boiler_number')->values();
+                }
+                $record = collect([
+                    'date' => $key,
+                    'first_record' => $first_record,
+                    'last_record' => $last_record,
+                ]);
+                $results->push($record);
+            }
+
+            //Step ต่อมาเป็นการวนลูปเพื่อหาส่วนต่างการใช้งาน Meter ในแต่ละวันที่มีการบันทึก
+            foreach ($results as $result) {
+                $boiler1_meter_used = CalculateController::getDailyUsed($result['last_record']->first()->fw_meter, $result['first_record']->first()->fw_meter);
+                $boiler2_meter_used = CalculateController::getDailyUsed($result['last_record']->last()->fw_meter, $result['first_record']->last()->fw_meter);
+                $result->put('used', [
+                    'boiler1_meter_used' => $boiler1_meter_used,
+                    'boiler2_meter_used' => $boiler2_meter_used
+                ]);
+            }
+        }
+        $results = collect([
+            'data' => $results,
+            'init' => [
+                'boiler1_meter_used' => 0,
+                'boiler2_meter_used' => 0
+            ]
+        ]);
+        return $results;
+    }
+
+    //Old คือ คำนวนโดยการนำวันสุดท้ายที่บันทึกของเดือนที่แล้วลบกับวันแรกของเดือนที่เลือก
+    //และวันปัจจบันลบด้วยวันก่อนหน้า นี้คือการทำงานของ method อันนี้
+    public static function getMonthlyResultOld($year, $month)
+    {
+        $boiler1_meter_used = 0;
+        $boiler2_meter_used = 0;
+        //Last Month ย้อนจากวันที่ 1 ไป 1 วัน
         $dateInput = Carbon::createFromFormat('Y-m-d', $year . '-' . $month . '-1');
-//        Carbon::setTestNow($dateInput);
-//        $last_month = Carbon::yesterday()->month;
-//        $last_year = Carbon::yesterday()->year;
-        $last_month = $dateInput->subDay(1)->month;
-        $last_year = $dateInput->subDay(1)->year;
-        $last_month_records = Boiler::whereYear('date', $last_year)
+        $last_month = $dateInput->subDay(1)->month; //ลบ 1 วันและเอาเฉพาะเดือน
+        $last_year = $dateInput->subDay(1)->year;// ลบ 1 วันและเอาเฉพาะปี
+        $last_month_records = Boiler::with('timeRecords.allDetails')
+            ->whereYear('date', $last_year)
             ->whereMonth('date', $last_month)
             ->get()->sortBy('date', SORT_NATURAL)->values()->groupBy('date');
         //End Last Month
         //Get Current Month
-        $records = Boiler::whereYear('date', $year)
+        //เรียงลำดับข้อมูลใหม่ตามวันที่ และ แยกข้อมูลตามวันที่
+        $records = Boiler::with('timeRecords.allDetails')
+            ->whereYear('date', $year)
             ->whereMonth('date', $month)
-            ->get()->sortBy('date', SORT_NATURAL)->values()->groupBy('date');
+            ->get()->sortBy('date', SORT_NATURAL)->values()
+            ->groupBy('date');
 
+        //Debug
+
+        //End Debug
         $results = collect([]);
-        if ($records->count() > 0) {
+        if ($records->count() > 0) {//ถ้ามีข้อมูลในเดือนนี้
             foreach ($records as $key => $values) {
-                $last_record = $values->sortBy('time_record', SORT_NATURAL)->values()->last();
+                //เรียงลำดับการบันทึกตามเวลาบันทึกจากน้อยไปมาก และ เลือกเอาเฉพาะค่าสุดท้าย เพื่อจะนำไปคำนวนหาส่วนต่าง
+//                $last_record = $values->sortBy('time_record', SORT_NATURAL)->values()->last();
+                $last_record = $values[0]->timeRecords->sortBy('time_record', SORT_NATURAL)
+                    ->values()
+                    ->last();
+                if ($last_record) {//If have boiler details
+                    //เรียงลำดับ boiler จากน้อยไปมาก
+                    $last_record = $last_record->allDetails->sortBy('boiler_number')->values();
+                }
                 $record = collect([
                     'date' => $key,
                     'last_record' => $last_record,
                 ]);
                 $results->push($record);
             }
+
+            //Step ต่อมาเป็นการวนลูปเพื่อหาส่วนต่างการใช้งาน Meter ในแต่ละวันที่มีการบันทึก
             $i = 0;
             foreach ($results as $result) {
-                if ($i == 0) {
+                if ($i == 0) {//ถ้าเป็นวันแรกของเดือน
                     if ($last_month_records->count() > 0) {
-                        $last_month_records = $last_month_records->last()->last();
-                        $boiler1_meter_used = CalculateController::getDailyUsed($result['last_record']['boiler1_meter'], $last_month_records['boiler1_meter']);
-                        $boiler2_meter_used = CalculateController::getDailyUsed($result['last_record']['boiler2_meter'], $last_month_records['boiler2_meter']);
+                        //เลือกเวลาบันทึกหลังสุดของวันสุดท้ายของเดือนที่แล้ว
+                        $last_month_records = $last_month_records->last()->last()
+                            ->timeRecords->sortBy('time_record', SORT_NATURAL)//เรียงเวลาใหม่จากน้อยไปมาก
+                            ->values()
+                            ->last()//เลือกเอามาเฉพาะเวลาสุดท้าย
+                            ->allDetails//เลือกเอามาเฉพาะ boiler Details
+                            ->sortBy('boiler_number')//เรียงลำดับ Boiler จากน้อยไปมาก
+                            ->values();//แปลงเป็น collection อันใหม่ ตอนนี้มัน boiler จะเรียง 1,2
+                        $boiler1_meter_used = CalculateController::getDailyUsed($result['last_record']->first()->fw_meter, $last_month_records->first()->fw_meter);
+                        $boiler2_meter_used = CalculateController::getDailyUsed($result['last_record']->last()->fw_meter, $last_month_records->last()->fw_meter);
                     }
                 } else {
-                    $boiler1_meter_used = CalculateController::getDailyUsed($results[$i]['last_record']['boiler1_meter'], $results[$i - 1]['last_record']['boiler1_meter']);
-                    $boiler2_meter_used = CalculateController::getDailyUsed($results[$i]['last_record']['boiler2_meter'], $results[$i - 1]['last_record']['boiler2_meter']);
+                    $boiler1_meter_used = CalculateController::getDailyUsed($results[$i]['last_record']->first()->fw_meter, $results[$i - 1]['last_record']->first()->fw_meter);
+                    $boiler2_meter_used = CalculateController::getDailyUsed($results[$i]['last_record']->last()->fw_meter, $results[$i - 1]['last_record']->last()->fw_meter);
 
                 }
                 $result->put('used', [

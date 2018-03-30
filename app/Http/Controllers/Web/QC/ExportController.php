@@ -61,7 +61,7 @@ class ExportController extends Controller
         //Header Table
         $sheet->mergeCells('A1:X1');
         $sheet->cell('A1', function ($cell) {
-            $cell->setValue('บริษัท สุราษฎร์ซีฟู้ดส์ จำกัดบริษัท');
+            $cell->setValue('บริษัท สุราษฎร์ซีฟู้ดส์ จำกัด');
 
         });
         $sheet->mergeCells('A2:X2');

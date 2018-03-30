@@ -20,6 +20,16 @@ class CarRequestController extends Controller
             ->orderBy('start_date', 'desc')->orderBy('start_time', 'desc')->paginate(100);
         return response()->json($carRequest);
     }
+    //Get Car Request By Month
+    public function getCarRequestByMonth(Request $request){
+        $carRequest = CarRequest::with('carType', 'status', 'division', 'employee',
+            'rank', 'passenger.employee','carResponse')
+            ->where('requested_by_user_id', $request->input('user_id'))
+            ->whereMonth('start_date',$request->input('month'))
+            ->whereYear('start_date',$request->input('year'))
+            ->orderBy('start_date', 'desc')->orderBy('start_time', 'desc')->paginate(100);
+        return response()->json($carRequest);
+    }
 
     /*Add Car Request*/
     public function addCarRequest(Request $request)

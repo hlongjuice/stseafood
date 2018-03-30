@@ -16,6 +16,7 @@ class CarAccessController extends Controller
         $carDeparture = CarResponse::with('carRequest', 'driver', 'division', 'employee', 'status', 'car.carType', 'carUsage')
             ->where('status_id', 3)
             ->where('car_access_status_id', $request->input('status_id'))
+            ->whereDate('date',$request->input('date'))
             ->orderBy('date', 'desc')
             ->orderBy('time', 'desc')
             ->paginate(100);

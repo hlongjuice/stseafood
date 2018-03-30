@@ -215,6 +215,8 @@ Route::group(['middleware' => 'auth:api'], function () {
             /*Get Car Request*/
             Route::post('/', 'Api\HumanResource\CarRequestController@getCarRequest')
                 ->name('human_resource.car_request.get');
+            //Get Car Request By Month
+            Route::post('/get_by_month','Api\HumanResource\CarRequestController@getCarRequestByMonth');
             /*Add Car Request*/
             Route::post('add', 'Api\HumanResource\CarRequestController@addCarRequest')
                 ->name('human_resource.car_request.add');
@@ -287,6 +289,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         /*Car Usage*/
         Route::prefix('car_usage')->group(function () {
             Route::post('get_by_month', 'Api\HumanResource\CarUsageController@getByMonth');
+            Route::post('get_by_year','Api\HumanResource\CarUsageController@getByYear');
         });
     });
     /*QC*/

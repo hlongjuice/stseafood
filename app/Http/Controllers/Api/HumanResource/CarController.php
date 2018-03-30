@@ -52,14 +52,10 @@ class CarController extends Controller
     }
     /*Update Car*/
     public function updateCar(Request $request){
-        $this->validate($request,[
-            'car_number'=>'required|unique:car'
-        ]);
-        $car=Car::where('id',$request->input('id'))->first();
+        $car=Car::where('id',$request->input('car_id'))->first();
         $car->car_number=$request->input('car_number');
         $car->car_type_id=$request->input('car_type_id');
         $car->plate_number=$request->input('plate_number');
-        $car->quantity=$request->input('quantity');
         $car->save();
         return response()->json($car);
     }
