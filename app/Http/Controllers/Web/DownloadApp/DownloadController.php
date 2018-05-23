@@ -21,7 +21,7 @@ class DownloadController extends Controller
 
     public function webUpdateFile(){
         return redirect(
-            'https://drive.google.com/drive/folders/1CzYaAILOuhbZJCXKJ5PjA1HPQnzT9Fk8?usp=sharing'
+            'https://drive.google.com/drive/folders/134Q0fa33LUV7onx5vFUdL96klCXo_wov?usp=sharing'
         );
     }
 
